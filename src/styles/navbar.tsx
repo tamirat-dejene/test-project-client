@@ -1,12 +1,11 @@
 import styled from "@emotion/styled";
 import { space, layout, color, typography, SpaceProps, LayoutProps, ColorProps, TypographyProps } from "styled-system";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 type ButtonProps = SpaceProps & LayoutProps & ColorProps & TypographyProps;
 
 const Header = styled.header`
   display: flex;
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
   gap: 25px;
@@ -31,7 +30,8 @@ const Logo = styled.div<TypographyProps>`
   }
 
   svg {
-    font-size: 3rem;
+    min-width: 50px;
+    min-height: 50px;
   }
 
   @media (max-width: 680px) {
@@ -85,7 +85,7 @@ const StyledForm = styled.form`
   min-width: 150px;
 `;
 
-const StyledLink = styled(Link) <TypographyProps>`
+const StyledLink = styled(NavLink) <TypographyProps>`
   ${typography}
   ${color}
   color: gold;
@@ -93,10 +93,27 @@ const StyledLink = styled(Link) <TypographyProps>`
   font-weight: bold;
   text-decoration: none;
   transition: color 0.3s ease;
+  padding: 5px 10px;
+
+  .bar {
+    display: none;
+  }
   
   &:hover {
     color: #FABC3F;
   }
+
+   &.active {
+    .bar {
+      display: block;
+      width: 30%;
+      margin: 0 auto;
+      margin-top: 5px;
+      height: 3px;
+      background-color: #ff6600;
+    }
+  }
+
 `;
 
 const SortBy = styled.div`
@@ -137,7 +154,7 @@ const Search = styled.div`
   border-bottom: 2px solid #EEEDEB;
   border-radius: 5px;
   padding: 2px 5px;
-  width: 300px;
+  width: 400px;
   max-width: 100%;
   transition: border 0.3s ease;
 
@@ -177,7 +194,7 @@ const SearchAndSort = styled.div`
   @media (max-width: 680px) {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 15px;
   }
 `;
 
@@ -198,7 +215,7 @@ const LogoAndCategoriesAndAddMusic = styled.div`
   @media (max-width: 680px) {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 15px;
   }
 `;
 

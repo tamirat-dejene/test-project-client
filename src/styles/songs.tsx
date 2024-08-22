@@ -13,7 +13,7 @@ const Table = styled.table`
   font-size: 1rem;
   text-align: left;
 
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 
   thead {
     position: sticky;

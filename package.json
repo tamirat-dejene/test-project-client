@@ -17,7 +17,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
     "rebass": "^4.0.7",
-    "styled-system": "^5.1.5"
+    "styled-system": "^5.1.5",
+    "test-project": "file:"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

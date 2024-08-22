@@ -10,7 +10,20 @@ const Container = styled.div`
 
 const Footer = styled.div`
   background-color: inherit;
-  height: 10vh;
+  height: 8.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.7;
+
+  border-top: 1px solid #45474B;
+  width: 90vw;
+  margin: 0 auto;
+  margin-top: 1.5vh;
+
 `
 const App = () => {
   return (
@@ -22,6 +35,7 @@ const App = () => {
         <Outlet />
       </div>
       <Footer>
+        <p>© 2024 Music. All rights reserved.</p>
       </Footer>
     </Container>
   )

@@ -3,26 +3,31 @@ import { FaMusic, FaPlayCircle, FaSearch } from "react-icons/fa";
 import { Button, Categories, Header, Logo, LogoAndCategories, LogoAndCategoriesAndAddMusic, Search, SearchAndSort, SortBy, StyledForm, StyledLink } from '../styles/navbar.tsx';
 import { getMusics } from "../services/mockdata.ts";
 
-
 const NavBar: React.FC = () => {
   return (
     <Header>
       <LogoAndCategoriesAndAddMusic>
         <LogoAndCategories>
           <Logo fontSize="2rem">
-            <FaPlayCircle color="gold" size={50}/>
+            <FaPlayCircle color="gold" size={50} />
             <h1>Music</h1>
           </Logo>
           <Categories>
-            <StyledLink to={"/songs"}>Songs</StyledLink>
-            <StyledLink to={"/albums"}>Albums</StyledLink>
-            <StyledLink to={"/artists"}>Artists</StyledLink>
+            <StyledLink to={"/songs"}>Songs
+              <div className="bar"></div>
+            </StyledLink>
+            <StyledLink to={"/albums"}>Albums
+              <div className="bar"></div>
+            </StyledLink>
+            <StyledLink to={"/artists"}>Artists
+              <div className="bar"></div>
+            </StyledLink>
           </Categories>
         </LogoAndCategories>
         <StyledForm>
           <Button type="submit" m="0" p="2">
             <FaMusic color="gold" />
-            <p>Add music</p>
+            <p>{ }Add music</p>
           </Button>
         </StyledForm>
       </LogoAndCategoriesAndAddMusic>
