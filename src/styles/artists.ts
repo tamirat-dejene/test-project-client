@@ -19,6 +19,7 @@ const ArtistCard = styled.div`
   padding: 12px;
   width: 120px;
   height: 120px;
+
   ${space}
   ${layout}
   ${color}
@@ -30,6 +31,11 @@ const ArtistImage = styled.img`
   margin-bottom: 5px;
   text-align: left;
   background-color: #537188;
+
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.03);
+  }
   ${layout}
 `;
 

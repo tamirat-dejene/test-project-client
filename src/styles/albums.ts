@@ -5,7 +5,7 @@ const Container = styled.div`
   width: 90vw;
   margin: 0 auto;
   background-color: inherit;
-  height: 70vh;
+  height: 60vh;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #333 #f2f2f2;

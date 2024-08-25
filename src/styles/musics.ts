@@ -2,9 +2,16 @@ import styled from "@emotion/styled";
 import { space, color, typography, TypographyProps } from "styled-system";
 
 const TableContainer = styled.div`
-  width: 89vw;
-  margin: 0 auto;
-  border: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: inherit;
+
+  justify-self: flex-start;
+  align-self: flex-start;
+  margin-bottom: 20px;
+  width: 100%;
 `;
 
 const Table = styled.table`
@@ -63,6 +70,8 @@ const Button = styled.button<TypographyProps>`
   margin-right: 5px;
   font-size: 0.9rem;
   transition: background-color 0.2s ease;
+  width: 100%;
+  height: 100%;
 
   &:hover {
     background-color: #555;

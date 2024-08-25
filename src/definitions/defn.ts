@@ -1,11 +1,14 @@
 type Music = {
-  id: number;
+  id?: number;
   title: string;
-  artist: string;
-  album: string;
-  genre: string;
+  artist?: string;
+  album?: string;
+  genre?: string;
   duration: string;
   url: string;
 };
 
-export type { Music };
+type Mode = "create" | "edit";
+
+
+export type { Music, Mode };

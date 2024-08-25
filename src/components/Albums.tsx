@@ -1,28 +1,21 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
-import { getMusics } from "../services/mockdata";
-import { Music } from "../definitions/defn";
 import albumIcon from '../assets/albumIcon.png';
 import { AlbumArtist, AlbumCard, AlbumImage, AlbumTitle, AlbumsContainer, Container} from '../styles/albums';  
+import { useAppSelector } from "../app/hooks";
+import ErrorComponent from "./Error";
+import AlbumSkeleton from "./skeletons/album-skeleton";
+import EmptyResponse from './EmptyResponse';
 
 const Albums = () => {
-  const [albums, setAlbums] = useState<Music[]>([]);
-
-  useEffect(() => {
-    const fetchAlbums = async () => {
-      const musics = await getMusics();
-      const albums = musics.filter((music, index, self) =>
-        index === self.findIndex((t) => t.album === music.album)
-      );
-      setAlbums(albums);
-    };
-    fetchAlbums();
-  }, []);
+  const { musicData, loading, loadError } = useAppSelector(state => state.musicData);
 
   return (
     <Container>
       <AlbumsContainer>
-        {albums.map((album) => (
+        {loading && <AlbumSkeleton />}
+        {loadError && ErrorComponent({ message: loadError })}
+        {musicData && !loading && musicData.length === 0 && <EmptyResponse message='No albums found' />}
+        {musicData && !loading && musicData.length !== 0 && musicData.map((album) => (
           <AlbumCard key={album.id}>
             <AlbumImage
               src={albumIcon}

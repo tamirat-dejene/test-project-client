@@ -9,10 +9,10 @@ const Header = styled.header`
   align-items: center;
   justify-content: center;
   gap: 25px;
-  padding: 15px;
+  padding: 2px;
   background: inherit;
   color: white;
-  height: 20vh;
+  height: 30vh;
   width: 90vw;
   margin: 0 auto;
 `;
@@ -57,7 +57,7 @@ const Button = styled.button<ButtonProps>`
   padding: 7px 10px;
   font-size: 1rem;
   transition: background-color 0.3s ease;
-  width: 100%;
+  width: 150px;
 
   display: flex;
   align-items: center;
@@ -154,7 +154,7 @@ const Search = styled.div`
   border-bottom: 2px solid #EEEDEB;
   border-radius: 5px;
   padding: 2px 5px;
-  width: 400px;
+  width: 450px;
   max-width: 100%;
   transition: border 0.3s ease;
 
@@ -182,6 +182,11 @@ const Search = styled.div`
     font-size: 1rem;
     cursor: pointer;
     min-width: 30px;
+  }
+
+  input:-internal-autofill-selected {
+    background-color: #45474B !important;
+    border-radius: 5px;
   }
 `;
 

@@ -1,31 +1,22 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
-import { getMusics } from "../services/mockdata";
-import { Music } from "../definitions/defn";
 import { Container } from "../styles/albums";
-import { ArtistCard, ArtistImage, ArtistName, ArtistsContainer} from '../styles/artists';
+import { ArtistCard, ArtistImage, ArtistName, ArtistsContainer } from '../styles/artists';
+import { useAppSelector } from "../app/hooks";
+import ArtistSkeleton from "./skeletons/artist-skeleton";
+import ErrorComponent from "./Error";
+import EmptyResponse from "./EmptyResponse";
 
 
 const Artists = () => {
-  const [artists, setArtists] = useState<Music[]>([]);
-
-  useEffect(() => {
-    const fetchArtists = async () => {
-      const artists = await getMusics();
-      const uniqueArtists = artists.filter(
-        (artist, index, self) =>
-          index === self.findIndex((t) => t.artist === artist.artist)
-      );
-
-      setArtists(uniqueArtists);
-    };
-    fetchArtists();
-  }, []);
+  const { musicData, loading, loadError } = useAppSelector(state => state.musicData);
 
   return (
     <Container>
+      {loading && <ArtistSkeleton />}
+      {loadError && <ErrorComponent message={loadError} />}
       <ArtistsContainer>
-        {artists.map((artist) => (
+        {musicData && !loading && musicData.length === 0 && <EmptyResponse message='No artists found' />}
+        {musicData && !loading && musicData.length !== 0 && musicData.map((artist) => (
           <ArtistCard key={artist.id}>
             <ArtistImage
               src={`https://robohash.org/${artist.id}.png?size=100x100`}
