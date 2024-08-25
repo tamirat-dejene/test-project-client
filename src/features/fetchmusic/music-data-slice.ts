@@ -39,7 +39,7 @@ export const musicDataSlice = createSlice({
       state.searchQuery = '';
       state.loading = false;
       state.musicData = [];
-    },
+    }
   },
 });
 

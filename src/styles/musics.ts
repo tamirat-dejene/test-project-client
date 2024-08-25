@@ -80,6 +80,7 @@ const Button = styled.button<TypographyProps>`
   ${({ color }) =>
     color === "red" &&
     `
+    min-width: 80px;
     background-color: #DC5F00;
     &:hover {
       background-color: darkred;
@@ -92,15 +93,4 @@ const Actions = styled.div`
   gap: 15px;
 `;
 
-
-export {
-  TableContainer,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Button,
-  Actions,
-};
+export { TableContainer, Table, Thead, Tbody, Tr, Th, Td, Button, Actions };

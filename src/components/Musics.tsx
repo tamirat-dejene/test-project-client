@@ -6,13 +6,12 @@ import TableSkeleton from "./skeletons/table-skeleton.js";
 import EmptyResponse from "./EmptyResponse.js";
 import ErrorComponent from "./Error.js";
 
-import { deleteMusicRequested } from "../features/deletemusic/delete-music-slice.js";
-import { fetchMusicDataRequested } from "../features/fetchmusic/music-data-slice.js";
+import { deleteMusicRequested, resetDeleteMusicState } from "../features/deletemusic/delete-music-slice.js";
 import { Actions, Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '../styles/musics';
 
 const Musics: React.FC = () => {
   const { musicData, loading, loadError } = useAppSelector(state => state.musicData);
-  const { isPending } = useAppSelector(state => state.deleteMusic);
+  const { deleteIsPending } = useAppSelector(state => state.deleteMusic);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -27,8 +26,12 @@ const Musics: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchMusicDataRequested({ searchQuery: '', sortOption: '' }));
-  }, [dispatch, isPending]);
+    if (!deleteIsPending) {
+      navigate('/');
+      dispatch(resetDeleteMusicState());
+    }
+  }, [deleteIsPending, dispatch, navigate]);
+
 
   return (
     <Container>
@@ -65,8 +68,13 @@ const Musics: React.FC = () => {
                         <Button color="red"
                           type="submit"
                           value={music.id}
-                          aria-disabled={isPending}
-                          disabled={isPending}>Delete</Button>
+                          aria-disabled={deleteIsPending}
+                          onClick={(e) => {
+                            e.currentTarget.blur();
+                            e.currentTarget.textContent = "Deleting"
+                            e.currentTarget.style.pointerEvents = 'none';
+                          }}
+                          disabled={deleteIsPending}>Delete</Button>
                       </Form>
                     </Actions>
                   </Td>
@@ -78,5 +86,19 @@ const Musics: React.FC = () => {
     </Container>
   );
 };
+
+
+// const DeleteButton = () => {
+//   const [pendingDelete, setPendingDelete] = useState(false);
+//   return (
+//     <Button type="submit" color="red"
+//       aria-disabled={pendingDelete}
+//       disabled={pendingDelete}
+//       onClick={() => setPendingDelete(true)}
+//     >
+//       {pendingDelete ? "Deleting..." : "Delete"}
+//     </Button>
+//   );
+// }
 
 export default Musics;

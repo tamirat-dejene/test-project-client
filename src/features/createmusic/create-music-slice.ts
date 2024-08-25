@@ -4,13 +4,13 @@ import { Music } from "../../definitions/defn";
 interface NewMusicState {
   createdMusic: Music | null;
   createError: string | null;
-  isPending: boolean;
+  createIsPending: boolean;
 }
 
 const initialState: NewMusicState = {
   createdMusic: null,
   createError: null,
-  isPending: false,
+  createIsPending: false,
 };
 
 export const createMusicSlice = createSlice({
@@ -19,19 +19,22 @@ export const createMusicSlice = createSlice({
   reducers: {
     createMusicRequested: (state, action) => {
       state.createdMusic = action.payload;
-      state.createError = null;
-      state.isPending = true;
+      state.createIsPending = true;
     },
     createMusicSucceeded: (state, action) => {
       state.createdMusic = action.payload;
-      state.createError = null;
-      state.isPending = false;
+      state.createIsPending = false;
     },
     createMusicFailed: (state, action) => {
       state.createError = action.payload;
-      state.createdMusic = null;
-      state.isPending = false;
+      state.createIsPending = false;
     },
+
+    resetState: (state) => {
+      state.createdMusic = null;
+      state.createError = null;
+      state.createIsPending = false;
+    }
   },
 });
 
@@ -46,6 +49,8 @@ export const selectNewMusic = (state: { createMusic: NewMusicState }) =>
 export const selectError = (state: { createMusic: NewMusicState }) =>
   state.createMusic.createError;
 export const selectCreating = (state: { createMusic: NewMusicState }) =>
-  state.createMusic.isPending;
+  state.createMusic.createIsPending;
+
+export const resetCreateMusicState = () => ({ type: "createMusic/resetState" });
 
 export default createMusicSlice.reducer;

@@ -4,13 +4,13 @@ import { Music } from "../../definitions/defn";
 interface UpdateMusicState {
   updatedMusic: Music | null;
   updateError: string | null;
-  isPending: boolean;
+  updateIsPending: boolean;
 }
 
 const initialState: UpdateMusicState = {
   updatedMusic: null,
   updateError: null,
-  isPending: false,
+  updateIsPending: false,
 };
 
 export const updateMusicSlice = createSlice({
@@ -19,19 +19,21 @@ export const updateMusicSlice = createSlice({
   reducers: {
     updateMusicRequested: (state, action) => {
       state.updatedMusic = action.payload;
-      state.updateError = null;
-      state.isPending = true;
+      state.updateIsPending = true;
     },
     updateMusicSucceeded: (state, action) => {
       state.updatedMusic = action.payload;
-      state.updateError = null;
-      state.isPending = false;
+      state.updateIsPending = false;
     },
     updateMusicFailed: (state, action) => {
       state.updateError = action.payload;
-      state.updatedMusic = null;
-      state.isPending = false;
+      state.updateIsPending = false;
     },
+    resetState: (state) => {
+      state.updatedMusic = null;
+      state.updateError = null;
+      state.updateIsPending = false;
+    }
   },
 });
 
@@ -43,11 +45,11 @@ export const {
 
 export const selectUpdatedMusic = (state: { updateMusic: UpdateMusicState }) =>
   state.updateMusic.updatedMusic;
-
 export const selectUpdating = (state: { updateMusic: UpdateMusicState }) =>
-  state.updateMusic.isPending;
-
+  state.updateMusic.updateIsPending;
 export const selectUpdateError = (state: { updateMusic: UpdateMusicState }) =>
   state.updateMusic.updateError;
+
+export const resetUpdateMusicState = () => ({ type: "updateMusic/resetState" });
 
 export default updateMusicSlice.reducer;

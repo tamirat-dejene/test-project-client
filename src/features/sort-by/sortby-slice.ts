@@ -9,7 +9,7 @@ const initialState: SortByState = {
 };
 
 export const sortBySlice = createSlice({
-  name: 'sortedBy',
+  name: 'sortBy',
   initialState,
   reducers: {
     setSortBy: (state, action: PayloadAction<string>) => {

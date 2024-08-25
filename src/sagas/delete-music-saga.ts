@@ -12,7 +12,7 @@ function* deleteMusicSaga(action: { type: string; payload: number }) {
     yield call(deleteMusic, action.payload);
     yield put(deleteMusicSucceeded());
   } catch (error) {
-    yield put(deleteMusicFailed(error));
+    yield put(deleteMusicFailed({ error: (error as Error).message }));
   }
 }
 

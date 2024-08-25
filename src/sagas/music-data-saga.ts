@@ -14,12 +14,10 @@ function* fetchMusicDataSaga(action: {
   const { searchQuery, sortOption } = action.payload;
 
   try {
-    const musicData: Music[] = yield call(() =>
-      fetchMusics({ searchQuery, sortBy: sortOption })
-    );
+    const musicData: Music[] = yield call(() => fetchMusics({ searchQuery, sortBy: sortOption }));
     yield put(fetchMusicDataSucceeded(musicData));
   } catch (error) {
-    yield put(fetchMusicDataFailed((error as Error).message));
+    yield put(fetchMusicDataFailed({ error: (error as Error).message }));
   }
 }
 

@@ -1,22 +1,22 @@
 import { put, call, takeLatest } from "redux-saga/effects";
 import { Music } from "../definitions/defn";
 import {
-  deleteMusicRequested,
-  deleteMusicSucceeded,
-  deleteMusicFailed,
-} from "../features/deletemusic/delete-music-slice";
+  updateMusicRequested,
+  updateMusicSucceeded,
+  updateMusicFailed,
+} from '../features/updateMusic/update-music-slice';
 
 import { updateMusic } from "../services/api";
 
-function* updateMusicSaga(action: { type: string; payload: { id: number; music: Music } }) {
+function* updateMusicSaga(action: { type: string; payload: Music }) {
   try {
-    yield call(updateMusic, action.payload.id, action.payload.music);
-    yield put(deleteMusicSucceeded());
+    const updatedMusic: Music = yield call(updateMusic, action.payload.id as number, action.payload);
+    yield put(updateMusicSucceeded(updatedMusic));
   } catch (error) {
-    yield put(deleteMusicFailed(error));
+    yield put(updateMusicFailed({ error: (error as Error).message }));
   }
 }
 
 export function* watchUpdateMusic() {
-  yield takeLatest(deleteMusicRequested.type, updateMusicSaga);
+  yield takeLatest(updateMusicRequested.type, updateMusicSaga);
 }

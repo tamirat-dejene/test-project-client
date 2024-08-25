@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Container } from "../styles/albums";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { createMusicRequested } from "../features/createmusic/create-music-slice";
-import { Form, FormContainer, FormLabel, FormRow, Input, InputData, Label, Underline, ButtonContainer, StyledLink, StyledButton } from "../styles/music-form";
 import { Mode } from "../definitions/defn";
-import { updateMusicRequested } from "../features/updateMusic/update-music-slice";
-
-
+import { useEffect, useState } from "react";
+import { Container } from "../styles/albums";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { createMusicRequested, resetCreateMusicState } from "../features/createmusic/create-music-slice";
+import { resetUpdateMusicState, updateMusicRequested } from "../features/updateMusic/update-music-slice";
+import { Form, FormContainer, FormLabel, FormRow, Input, InputData, Label, Underline, ButtonContainer, StyledLink, StyledButton } from "../styles/music-form";
 
 const MusicForm = ({ mode }: { mode: Mode }) => {
   const [title, setTitle] = useState("");
@@ -18,6 +16,10 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
   const [url, setUrl] = useState("");
 
   const { musicId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+
   useEffect(() => {
     if (mode === 'edit' && musicId) {
       fetch(`https://test-project-server-tamiu.vercel.app/musics/${musicId}`)
@@ -34,16 +36,17 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
     }
   }, [mode, musicId]);
 
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { createdMusic, createError, isPending } = useAppSelector(state => state.createMusic);
-  const upDate = useAppSelector(state => state.updateMusic);
+
+  const { createdMusic, createError, createIsPending } = useAppSelector(state => state.createMusic);
+  const { updatedMusic, updateError, updateIsPending } = useAppSelector(state => state.updateMusic);
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     if (mode === 'edit') {
+      console.log("Updating music: ", { id: musicId, title, artist, album, genre, duration, url });
       dispatch(updateMusicRequested({ id: musicId, title, artist, album, genre, duration, url }));
     } else {
+      console.log("Creating music: ", { title, artist, album, genre, duration, url });
       dispatch(createMusicRequested({ title, artist, album, genre, duration, url }));
     }
   }
@@ -51,36 +54,28 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
   useEffect(() => {
     switch (mode) {
       case 'create':
-        if (!isPending && createdMusic) {
-          window.alert('New Music created!');
-          setTitle('');
-          setArtist('');
-          setAlbum('');
-          setGenre('');
-          setDuration('');
-          setUrl('');
+        if (!createIsPending && !createError && createdMusic) {
+          console.log("Music created: ", createdMusic);
+          setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
           navigate('/');
-        } else if (!isPending && createError) {
+          dispatch(resetCreateMusicState());
+        } else if (!createIsPending && createError && !createdMusic) {
           console.log("Error creating music: ", createError);
-          window.alert('Error creating music');
         }
+
         break;
       case 'edit':
-        if (!upDate.isPending && upDate.updatedMusic) {
-          window.alert('Music updated!');
-          setTitle('');
-          setArtist('');
-          setAlbum('');
-          setGenre('');
-          setDuration('');
-          setUrl('');
+        if (!updateIsPending && updatedMusic && !updateError) {
+          console.log("Music updated: ", updatedMusic);
+          setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
+
           navigate('/');
-        } else if (!isPending && createError) {
-          console.log("Error updating music: ", createError);
-          window.alert('Error updating music');
+          dispatch(resetUpdateMusicState());
+        } else if (!updateIsPending && updateError && updatedMusic) {
+          console.log("Error updating music: ", updateError);
         }
     }
-  }, [isPending, createdMusic, createError, navigate, mode, upDate.isPending, upDate.updatedMusic, upDate.updateError]);
+  }, [createIsPending, updateIsPending, createdMusic, updatedMusic, createError, updateError, mode, dispatch, navigate]);
 
   return (
     <Container>
@@ -169,8 +164,14 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
             <StyledLink to="/">
               Cancel
             </StyledLink>
-            <StyledButton type="submit" disabled={isPending} aria-disabled={isPending}>
-              {isPending ? (mode === 'create' ? "Creating..." : "Updating...") : (mode === 'create' ? "Create Music" : "Update Music")}
+            <StyledButton
+              type="submit"
+              disabled={updateIsPending || createIsPending}
+              aria-disabled={updateIsPending || createIsPending}
+            >
+              {(createIsPending || updateIsPending)
+                ? (mode === 'create' ? "Creating..." : "Updating...")
+                : (mode === 'create' ? "Create Music" : "Update Music")}
             </StyledButton>
           </ButtonContainer>
         </Form>

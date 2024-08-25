@@ -13,7 +13,7 @@ function* createMusicSaga(action: { type: string; payload: Music }) {
     const newMusic: Music = yield call(createMusic, action.payload);
     yield put(createMusicSucceeded(newMusic));
   } catch (error) {
-    yield put(createMusicFailed(error));
+    yield put(createMusicFailed({ error: (error as Error).message }));
   }
 }
 

@@ -3,13 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 interface DeleteMusicState {
   deletedMusicId: number | null;
   deleteError: string | null;
-  isPending: boolean;
+  deleteIsPending: boolean;
 }
 
 const initialState: DeleteMusicState = {
   deletedMusicId: null, 
   deleteError: null,
-  isPending: false,
+  deleteIsPending: false,
 };
 
 export const deleteMusicSlice = createSlice({
@@ -18,19 +18,20 @@ export const deleteMusicSlice = createSlice({
   reducers: {
     deleteMusicRequested: (state, _action) => {
       state.deletedMusicId = _action.payload;
-      state.isPending = true;
-      state.deleteError = null;
+      state.deleteIsPending = true;
     },
     deleteMusicSucceeded: (state) => {
-      state.isPending = false;
-      state.deletedMusicId = null;
-      state.deleteError = null;
+      state.deleteIsPending = false;
     },
     deleteMusicFailed: (state, action) => {
       state.deleteError = action.payload;
-      state.deletedMusicId = null;
-      state.isPending = false;
+      state.deleteIsPending = false;
     },
+    resetState: (state) => {
+      state.deletedMusicId = null;
+      state.deleteError = null;
+      state.deleteIsPending = false;
+    }
   },
 });
 
@@ -43,8 +44,10 @@ export const {
 export const selectDeletedMusic = (state: { deleteMusic: DeleteMusicState }) =>
   state.deleteMusic.deletedMusicId;
 export const selectDeleting = (state: { deleteMusic: DeleteMusicState }) =>
-  state.deleteMusic.isPending;
+  state.deleteMusic.deleteIsPending;
 export const selectError = (state: { deleteMusic: DeleteMusicState }) =>
   state.deleteMusic.deleteError;
+
+export const resetDeleteMusicState = () => ({ type: "deleteMusic/resetState" });
 
 export default deleteMusicSlice.reducer;

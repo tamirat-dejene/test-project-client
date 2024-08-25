@@ -17,7 +17,7 @@ const NavBar: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedFetchMusicData = useCallback(
     _.debounce((searchQuery, sortOption) => {
-      dispatch(fetchMusicDataRequested({ searchQuery, sortBy: sortOption }))
+      dispatch(fetchMusicDataRequested({ searchQuery, sortOption }))
     }, 500),
     []);
 

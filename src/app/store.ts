@@ -8,10 +8,7 @@ import { createMusicSlice } from '../features/createmusic/create-music-slice';
 import { deleteMusicSlice } from '../features/deletemusic/delete-music-slice';
 import { updateMusicSlice } from '../features/updateMusic/update-music-slice';
 
-import { watchFetchMusicData } from '../sagas/music-data-saga';
-import { watchCreateMusic } from '../sagas/create-music-saga';
-import { watchUpdateMusic } from '../sagas/update-music-saga';
-import { watchDeleteMusic } from '../sagas/delete-music-saga';
+import rootSaga from '../sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -28,10 +25,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
 });
 
-sagaMiddleware.run(watchFetchMusicData);
-sagaMiddleware.run(watchCreateMusic);
-sagaMiddleware.run(watchDeleteMusic);
-sagaMiddleware.run(watchUpdateMusic);
+sagaMiddleware.run(rootSaga);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
