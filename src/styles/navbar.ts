@@ -87,6 +87,10 @@ const Categories = styled.div`
     cursor: pointer;
     transition: color 0.3s ease;
   }
+
+  @media (max-width: 680px) {
+    gap: 10px;
+  }
 `;
 
 const StyledForm = styled.form`
@@ -164,7 +168,7 @@ const Search = styled.div`
   border-bottom: 2px solid #EEEDEB;
   border-radius: 5px;
   padding: 2px 5px;
-  width: 439px;
+  width: 450px;
   max-width: 100%;
   transition: border 0.3s ease;
 
@@ -221,7 +225,7 @@ const LogoAndCategories = styled.div`
   width: 100%;
 
   @media (max-width: 680px) {
-    gap: 8px;
+    gap: 15px;
   }
 `;
 
