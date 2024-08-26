@@ -1,8 +1,28 @@
-# Test Project: CRUD music-app, with modern looking UI
+# CRUD Music App
 
-# tools
-  react: ui
-  react-redux, redux-toolkit: state management
-  react-router: client side routing
-  emotion, styled-system: styling
-  
+A CRUD music app built with React and a focus on clean UI and state management.
+
+## Tech Stack
+
+- **React**: UI development
+- **React Redux & Redux Toolkit**: State management
+- **React Router**: Client-side routing
+- **Emotion & Styled-System**: Styling
+- **fetch**: HTTP requests
+- **Vite**: Development build
+
+## Get Started...
+
+1. Clone the repo:
+    ```bash
+    git clone https://github.com/yourusername/music-app.git
+    cd music-app
+    ```
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
+3. Start the development server:
+    ```bash
+    npm run dev
+    ```
