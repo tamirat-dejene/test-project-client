@@ -25,6 +25,7 @@ export const deleteMusicSlice = createSlice({
     },
     deleteMusicFailed: (state, action) => {
       state.deleteError = action.payload;
+      state.deletedMusicId = null;
       state.deleteIsPending = false;
     },
     resetState: (state) => {

@@ -7,11 +7,13 @@ const FormContainer = styled.div`
   background: #fff;
   padding: 15px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin-top: 30vh;
 `;
 
 const FormLabel = styled.h2`
   text-align: left;
-  padding-left: 24px;
+  padding-left: 30px;
   font-size: 32px;
   font-weight: 600;
   color: goldenrod;
@@ -30,8 +32,8 @@ const FormRow = styled.div`
 
 const InputData = styled.div`
   width: 100%;
-  height: 30px;
-  margin: 0 25px;
+  height: 40px;
+  margin: 0 30px;
   position: relative;
   ${layout}
 `;
@@ -41,12 +43,12 @@ const Input = styled.input`
   width: 100%;
   height: 100%;
   border: none;
-  font-size: 17px;
+  font-size: 18px;
   padding: 0 5px;
   border-bottom: 2px solid rgba(0, 0, 0, 0.12);
   &:focus ~ label,
   &:valid ~ label {
-    transform: translateY(-20px);
+    transform: translateY(-32px);
     font-size: 14px;
     color: #3498db;
   }

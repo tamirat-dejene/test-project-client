@@ -8,12 +8,13 @@ import Artists from './components/Artists';
 import { Provider } from 'react-redux';
 import store from './app/store';
 import MusicForm from './components/MusicForm';
+import NotFound from './components/NotFound';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <div>Oops! Something went wrong. Try again later.</div>,
+    errorElement: <NotFound />,
     children: [
       {
         index: true,

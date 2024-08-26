@@ -28,17 +28,38 @@ export const musicDataSlice = createSlice({
     },
     fetchMusicDataSucceeded: (state, action) => {
       state.musicData = action.payload;
-      state.sortOption = action.payload.sortBy;
+      state.sortOption = 'a-z';
       state.searchQuery = '';
       state.loading = false;
-      state.loadError = null;
     },
     fetchMusicDataFailed: (state, action) => {
       state.loadError = action.payload;
       state.sortOption = 'a-z';
       state.searchQuery = '';
       state.loading = false;
-      state.musicData = [];
+    },
+
+    removeMusicWithId: (state, action) => {
+      console.log('ac-pl',action.payload);
+      state.musicData = state.musicData.filter(
+        (music) => music.id !== action.payload
+      );
+    },
+
+    updateMusicWithId: (state, action) => {
+      const index = state.musicData.findIndex(
+        (music) => music.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.musicData[index] = {
+          ...state.musicData[index],
+          ...action.payload,
+        };
+      }
+    },
+
+    createNewMusic: (state, action) => {
+      state.musicData = [...state.musicData, action.payload];
     }
   },
 });
@@ -46,7 +67,10 @@ export const musicDataSlice = createSlice({
 export const {
   fetchMusicDataRequested,
   fetchMusicDataSucceeded,
-  fetchMusicDataFailed
+  fetchMusicDataFailed,
+  removeMusicWithId,
+  updateMusicWithId,
+  createNewMusic,
 } = musicDataSlice.actions;
 
 export default musicDataSlice.reducer;

@@ -1,6 +1,5 @@
 import { Mode } from "../definitions/defn";
 import { useEffect, useState } from "react";
-import { Container } from "../styles/albums";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { createMusicRequested, resetCreateMusicState } from "../features/createmusic/create-music-slice";
@@ -39,6 +38,7 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
 
   const { createdMusic, createError, createIsPending } = useAppSelector(state => state.createMusic);
   const { updatedMusic, updateError, updateIsPending } = useAppSelector(state => state.updateMusic);
+  const { musicData } = useAppSelector(state => state.musicData);
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
@@ -57,7 +57,8 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
         if (!createIsPending && !createError && createdMusic) {
           console.log("Music created: ", createdMusic);
           setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
-          navigate('/');
+          navigate('/musics');
+
           dispatch(resetCreateMusicState());
         } else if (!createIsPending && createError && !createdMusic) {
           console.log("Error creating music: ", createError);
@@ -68,19 +69,28 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
         if (!updateIsPending && updatedMusic && !updateError) {
           console.log("Music updated: ", updatedMusic);
           setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
-
-          navigate('/');
+          navigate('/musics');
           dispatch(resetUpdateMusicState());
         } else if (!updateIsPending && updateError && updatedMusic) {
           console.log("Error updating music: ", updateError);
         }
     }
-  }, [createIsPending, updateIsPending, createdMusic, updatedMusic, createError, updateError, mode, dispatch, navigate]);
+  }, [createIsPending, updateIsPending, createdMusic, updatedMusic, createError, updateError, mode, dispatch, navigate, musicData]);
 
   return (
-    <Container>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
+      width: '100%',
+    }}>
       <FormContainer>
-        <FormLabel>New Music</FormLabel>
+        <FormLabel>{
+          mode === 'create'
+            ? "Create New Music"
+            : "Edit Music"
+        }</FormLabel>
         <Form onSubmit={handleSubmit}>
           <FormRow>
             <InputData>
@@ -176,7 +186,7 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
           </ButtonContainer>
         </Form>
       </FormContainer>
-    </Container>
+    </div>
   );
 }
 

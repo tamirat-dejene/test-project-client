@@ -28,8 +28,9 @@ const fetchMusics = async ({
     }
 
     const musics = await response.json();
+    // console.log("Musics fetched:", musics);
     return musics;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // console.error("Error fetching musics:", error);
     return [];

@@ -1,15 +1,6 @@
 import styled from "@emotion/styled";
 import { space, layout, typography, color } from "styled-system";
 
-const Container = styled.div`
-  width: 90vw;
-  margin: 0 auto;
-  background-color: inherit;
-  height: 60vh;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #333 #f2f2f2;
-`
 const AlbumsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -68,4 +59,4 @@ const AlbumArtist = styled.p`
   ${typography}
 `;
 
-export { Container, AlbumsContainer, AlbumCard, AlbumImage, AlbumTitle, AlbumArtist };
+export { AlbumsContainer, AlbumCard, AlbumImage, AlbumTitle, AlbumArtist };

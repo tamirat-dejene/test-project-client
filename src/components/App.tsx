@@ -1,20 +1,20 @@
-import { Outlet } from "react-router-dom"
-import { Container, Footer } from "../styles/app";
 import NavBar from "./NavBar";
+import { Outlet } from "react-router-dom"
+import { MainContainer, Footer, OutletContainer } from "../styles/app";
 
 const App = () => {
   return (
-    <Container>
+    <MainContainer>
       <div className="header">
         <NavBar />
       </div>
-      <div className="detail">
+      <OutletContainer>
         <Outlet />
-      </div>
+      </OutletContainer>
       <Footer>
         <p>© 2024 Music. All rights reserved.</p>
       </Footer>
-    </Container>
+    </MainContainer>
   )
 }
 

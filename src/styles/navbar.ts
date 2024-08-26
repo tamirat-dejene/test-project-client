@@ -15,6 +15,16 @@ const Header = styled.header`
   height: 30vh;
   width: 90vw;
   margin: 0 auto;
+  //
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  @media (max-width: 768px) {
+    height: 35vh;
+  }
 `;
 
 const Logo = styled.div<TypographyProps>`
@@ -154,7 +164,7 @@ const Search = styled.div`
   border-bottom: 2px solid #EEEDEB;
   border-radius: 5px;
   padding: 2px 5px;
-  width: 450px;
+  width: 439px;
   max-width: 100%;
   transition: border 0.3s ease;
 

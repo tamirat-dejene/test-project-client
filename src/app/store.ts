@@ -7,8 +7,7 @@ import { musicDataSlice } from '../features/fetchmusic/music-data-slice';
 import { createMusicSlice } from '../features/createmusic/create-music-slice';
 import { deleteMusicSlice } from '../features/deletemusic/delete-music-slice';
 import { updateMusicSlice } from '../features/updateMusic/update-music-slice';
-
-import rootSaga from '../sagas';
+import rootSaga from '../sagas/sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 
