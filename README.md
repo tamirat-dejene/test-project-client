@@ -15,8 +15,8 @@ A CRUD music app built with React and a focus on clean UI and state management.
 
 1. Clone the repo:
     ```bash
-    git clone https://github.com/yourusername/music-app.git
-    cd music-app
+    git clone https://github.com/tamirat-dejene/test-project-client
+    cd test-project-client
     ```
 2. Install dependencies:
     ```bash
