@@ -92,7 +92,7 @@ export const musicDataSlice = createSlice({
       action: PayloadAction<{ newMusic: Music }>
     ) => {
       state.createdMusic = action.payload.newMusic;
-      state.musicData.push(action.payload.newMusic);
+      state.musicData.unshift(action.payload.newMusic);
       state.createIsPending = false;
     },
     createMusicFailed: (state, action: PayloadAction<{ createError: string }>) => {

@@ -76,10 +76,13 @@ const Button = styled.button<TypographyProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 3px;
+  gap: 5px;
+  min-width: 70px;
 
   svg {
     margin-bottom: 4px;
+    width: 17px;
+    height: 17px;
   }
 
   &:hover {

@@ -68,7 +68,10 @@ const Musics: React.FC = () => {
                       <Button value={music.id} type="button" onClick={handleEdit}
                         disabled={deletedMusicId === music.id}
                         aria-disabled={deletedMusicId === music.id}>
-                        Edit{' '}<FaEdit />
+                        <>Edit{' '}<FaEdit
+                          // make size fizxed
+                          style={{ width: '17px', height: '17px' }}
+                        /></>
                       </Button>
                     </Form>
                     <Form onSubmit={handleDelete}>
