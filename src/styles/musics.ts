@@ -73,6 +73,15 @@ const Button = styled.button<TypographyProps>`
   width: 100%;
   height: 100%;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+
+  svg {
+    margin-bottom: 4px;
+  }
+
   &:hover {
     background-color: #555;
   }

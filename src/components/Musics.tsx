@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks.js";
 
 import { deleteMusicRequested, resetDeleteMusicState } from "../features/music-data-slice.js";
 import { Actions, Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '../styles/musics';
+import { FaSpinner, FaTrash } from "react-icons/fa";
 
 const Musics: React.FC = () => {
   const { musicData, loading, loadError } = useAppSelector(state => state.musicData);
@@ -65,20 +66,19 @@ const Musics: React.FC = () => {
                   <Actions>
                     <Form>
                       <Button value={music.id} type="button" onClick={handleEdit}
-                        disabled={deleteIsPending}
-                        aria-disabled={deleteIsPending}>Edit</Button>
+                        disabled={deletedMusicId === music.id}
+                        aria-disabled={deletedMusicId === music.id}>Edit</Button>
                     </Form>
                     <Form onSubmit={handleDelete}>
                       <Button color="red"
                         type="submit"
                         value={music.id}
                         aria-disabled={deleteIsPending}
-                        onClick={(e) => {
-                          e.currentTarget.blur();
-                          e.currentTarget.textContent = "Deleting"
-                          e.currentTarget.style.pointerEvents = 'none';
-                        }}
-                        disabled={deleteIsPending}>Delete</Button>
+                        disabled={deleteIsPending}>{
+                          deletedMusicId === music.id ?
+                            <>Del...<FaSpinner /></> :
+                            <>Delete <FaTrash /></>
+                        }</Button>
                     </Form>
                   </Actions>
                 </Td>
