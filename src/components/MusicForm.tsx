@@ -153,7 +153,7 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
 
           <FormRow>
             <InputData>
-              <Input type="text"
+              <Input type="url"
                 value={url}
                 name="url"
                 id="music-url" aria-describedby="url-error"
