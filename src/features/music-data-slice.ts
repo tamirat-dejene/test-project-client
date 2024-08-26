@@ -29,7 +29,7 @@ const initialState: MusicDataState = {
   musicData: [],
   sortOption: "",
   searchQuery: "",
-  loading: false,
+  loading: true,
   loadError: null,
 
   createdMusic: null,
