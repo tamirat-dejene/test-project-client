@@ -21,7 +21,7 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
 
   useEffect(() => {
     if (mode === 'edit' && musicId) {
-      fetch(`https://test-project-server-tdejene.vercel.app/${musicId}`)
+      fetch(`https://test-project-server-tdejene.vercel.app/musics/${musicId}`)
         .then(response => response.json())
         .then(data => {
           setTitle(data.title);
