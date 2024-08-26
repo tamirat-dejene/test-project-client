@@ -219,6 +219,10 @@ const LogoAndCategories = styled.div`
   gap: 20px;
   align-items: center;
   width: 100%;
+
+  @media (max-width: 680px) {
+    gap: 8px;
+  }
 `;
 
 const LogoAndCategoriesAndAddMusic = styled.div`

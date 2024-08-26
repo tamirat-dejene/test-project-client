@@ -77,7 +77,6 @@ export const musicDataSlice = createSlice({
     },
     resetFetchDataState: (state) => {
       state.loadError = null;
-
     },
 
     // Create music
