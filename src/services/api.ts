@@ -9,7 +9,7 @@ const fetchMusics = async ({
 }): Promise<Music[]> => {
   try {
     const response = await fetch(
-      `https://test-project-server-tamiu.vercel.app/musics?q=${
+      `https://test-project-server-tdejene.vercel.app/musics?q=${
         searchQuery || ""
       }&o=${sortBy || ""}`,
       {
@@ -49,7 +49,7 @@ const createMusic = async (newMusic: Music): Promise<Music> => {
 
   // try {
   const response = await fetch(
-    "https://test-project-server-tamiu.vercel.app/musics",
+    "https://test-project-server-tdejene.vercel.app/musics",
     {
       method: "POST",
       headers: {
@@ -77,7 +77,7 @@ const createMusic = async (newMusic: Music): Promise<Music> => {
 const deleteMusic = async (id: number): Promise<boolean> => {
   try {
     const response = await fetch(
-      `https://test-project-server-tamiu.vercel.app/musics/${id}`,
+      `https://test-project-server-tdejene.vercel.app/musics/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -113,7 +113,7 @@ const updateMusic = async (id: number, updatedMusic: Music): Promise<Music> => {
 
   // try {
   const response = await fetch(
-    `https://test-project-server-tamiu.vercel.app/musics/${id}`,
+    `https://test-project-server-tdejene.vercel.app/musics/${id}`,
     {
       method: "PUT",
       headers: {
