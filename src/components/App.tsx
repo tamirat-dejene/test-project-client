@@ -12,7 +12,7 @@ const App = () => {
         <Outlet />
       </OutletContainer>
       <Footer>
-        <p>© 2024 Music. All rights reserved.</p>
+        <p>© 2024 Music. tamiu-dejen</p>
       </Footer>
     </MainContainer>
   )
