@@ -2,16 +2,16 @@ import { Music } from "../definitions/defn";
 
 const fetchMusics = async ({
   searchQuery,
-  sortBy,
+  sortOption,
 }: {
   searchQuery?: string;
-  sortBy?: string;
+  sortOption?: string;
 }): Promise<Music[]> => {
   try {
     const response = await fetch(
       `https://test-project-server-tdejene.vercel.app/musics?q=${
         searchQuery || ""
-      }&o=${sortBy || ""}`,
+      }&o=${sortOption || ""}`,
       {
         method: "GET",
         headers: {
@@ -30,7 +30,7 @@ const fetchMusics = async ({
     const musics = await response.json();
     // console.log("Musics fetched:", musics);
     return musics;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // console.error("Error fetching musics:", error);
     return [];
@@ -46,8 +46,6 @@ const createMusic = async (newMusic: Music): Promise<Music> => {
     duration: newMusic.duration,
     url: newMusic.url,
   };
-
-  // try {
   const response = await fetch(
     "https://test-project-server-tdejene.vercel.app/musics",
     {
@@ -68,10 +66,6 @@ const createMusic = async (newMusic: Music): Promise<Music> => {
 
   const data = await response.json();
   return data;
-  // } catch (error) {
-  //   // console.error("Error creating music:", error);
-  //   throw error;
-  // }
 };
 
 const deleteMusic = async (id: number): Promise<boolean> => {
@@ -111,7 +105,6 @@ const updateMusic = async (id: number, updatedMusic: Music): Promise<Music> => {
     url: updatedMusic.url,
   };
 
-  // try {
   const response = await fetch(
     `https://test-project-server-tdejene.vercel.app/musics/${id}`,
     {
@@ -131,12 +124,7 @@ const updateMusic = async (id: number, updatedMusic: Music): Promise<Music> => {
   }
 
   const data = await response.json();
-  // console.log(data);
   return data;
-  // } catch (error) {
-  // console.error("Error updating music:", error);
-  //   throw error;
-  // }
 };
 
 export { fetchMusics, createMusic, deleteMusic, updateMusic };

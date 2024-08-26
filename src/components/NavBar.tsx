@@ -1,28 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import React, { useCallback, useEffect } from "react";
 import { FaMusic, FaPlayCircle, FaSearch } from "react-icons/fa";
-import { Button, Categories, Header, Logo, LogoAndCategories, LogoAndCategoriesAndAddMusic, Search, SearchAndSort, SortBy, StyledLink } from '../styles/navbar';
-import { setSortBy } from "../features/sort-by/sortby-slice.ts";
-import { setSearchQuery } from "../features/search/search-slice.ts";
 import { useAppDispatch, useAppSelector } from "../app/hooks.ts";
-import { fetchMusicDataRequested } from "../features/fetchmusic/music-data-slice.ts";
+import { fetchMusicDataRequested, setSearchQuery, setSortOption } from "../features/music-data-slice.ts";
+import { Button, Categories, Header, Logo, LogoAndCategories, LogoAndCategoriesAndAddMusic, Search, SearchAndSort, SortBy, StyledLink } from '../styles/navbar';
 import _ from 'lodash';
 
 const NavBar: React.FC = () => {
-  const searchQuery = useAppSelector(state => state.search.searchQuery);
-  const sortOption = useAppSelector(state => state.sortBy.sortOption);
+  const searchQuery = useAppSelector(state => state.musicData.searchQuery);
+  const sortOption = useAppSelector(state => state.musicData.sortOption);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedFetchMusicData = useCallback(
-    _.debounce((searchQuery, sortOption) => {
-      dispatch(fetchMusicDataRequested({ searchQuery, sortOption }))
-    }, 500),
-    []);
+    _.debounce(() => {
+      dispatch(fetchMusicDataRequested())
+    }, 500), []);
 
   useEffect(() => {
-    debouncedFetchMusicData(searchQuery, sortOption);
+    debouncedFetchMusicData();
   }, [searchQuery, sortOption, debouncedFetchMusicData]);
 
   return (
@@ -59,7 +56,7 @@ const NavBar: React.FC = () => {
             name='q' id='q'
             value={searchQuery}
             placeholder="Search"
-            onChange={e => dispatch(setSearchQuery(e.target.value))}
+            onChange={e => dispatch(setSearchQuery({ searchQuery: e.target.value }))}
           />
           <FaSearch />
         </Search>
@@ -68,7 +65,7 @@ const NavBar: React.FC = () => {
           <select
             name="sortby" id="sortby"
             value={sortOption}
-            onChange={e => dispatch(setSortBy(e.target.value))}
+            onChange={e => dispatch(setSortOption({ sortOption: e.target.value }))}
           >
             <option value="a-z">A - Z</option>
             <option value="z-a">Z - A</option>

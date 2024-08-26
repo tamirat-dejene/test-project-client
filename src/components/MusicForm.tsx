@@ -2,8 +2,7 @@ import { Mode } from "../definitions/defn";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { createMusicRequested, resetCreateMusicState } from "../features/createmusic/create-music-slice";
-import { resetUpdateMusicState, updateMusicRequested } from "../features/updateMusic/update-music-slice";
+import { createMusicRequested, resetCreateMusicState, resetUpdateMusicState, updateMusicRequested } from "../features/music-data-slice";
 import { Form, FormContainer, FormLabel, FormRow, Input, InputData, Label, Underline, ButtonContainer, StyledLink, StyledButton } from "../styles/music-form";
 
 const MusicForm = ({ mode }: { mode: Mode }) => {
@@ -18,36 +17,31 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const { musicData, createdMusic, createError, createIsPending, updatedMusic, updateError, updateIsPending } = useAppSelector(state => state.musicData);
 
   useEffect(() => {
-    if (mode === 'edit' && musicId) {
-      fetch(`https://test-project-server-tdejene.vercel.app/musics/${musicId}`)
-        .then(response => response.json())
-        .then(data => {
-          setTitle(data.title);
-          setArtist(data.artist);
-          setAlbum(data.album);
-          setGenre(data.genre);
-          setDuration(data.duration);
-          setUrl(data.url);
-        })
-        .catch(error => console.error('Error fetching music data:', error));
+    if (mode === 'edit' && musicData) {
+      const music = musicData.find(music => music.id === Number(musicId));
+      if (music) {
+        setTitle(music.title || '');
+        setArtist(music.artist || '');
+        setAlbum(music.album || '');
+        setGenre(music.genre || '');
+        setDuration(music.duration);
+        setUrl(music.url);
+      }
     }
-  }, [mode, musicId]);
-
-
-  const { createdMusic, createError, createIsPending } = useAppSelector(state => state.createMusic);
-  const { updatedMusic, updateError, updateIsPending } = useAppSelector(state => state.updateMusic);
-  const { musicData } = useAppSelector(state => state.musicData);
+  }, [mode, musicData, musicId]);
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     if (mode === 'edit') {
-      console.log("Updating music: ", { id: musicId, title, artist, album, genre, duration, url });
-      dispatch(updateMusicRequested({ id: musicId, title, artist, album, genre, duration, url }));
+      const updated = { updated: { id: Number(musicId), title, artist, album, genre, duration, url } }
+      console.log("Updating music: ", updated);
+      dispatch(updateMusicRequested({ updatedMusic: { id: Number(musicId), title, artist, album, genre, duration, url } }));
     } else {
       console.log("Creating music: ", { title, artist, album, genre, duration, url });
-      dispatch(createMusicRequested({ title, artist, album, genre, duration, url }));
+      dispatch(createMusicRequested({ newMusic: { title, artist, album, genre, duration, url } }));
     }
   }
 
@@ -57,18 +51,18 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
         if (!createIsPending && !createError && createdMusic) {
           console.log("Music created: ", createdMusic);
           setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
-          navigate('/musics');
 
+          navigate('/musics');
           dispatch(resetCreateMusicState());
         } else if (!createIsPending && createError && !createdMusic) {
           console.log("Error creating music: ", createError);
         }
-
         break;
       case 'edit':
         if (!updateIsPending && updatedMusic && !updateError) {
           console.log("Music updated: ", updatedMusic);
           setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
+
           navigate('/musics');
           dispatch(resetUpdateMusicState());
         } else if (!updateIsPending && updateError && updatedMusic) {

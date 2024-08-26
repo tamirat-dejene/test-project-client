@@ -1,28 +1,21 @@
 import { put, call, takeLatest, all, select } from "redux-saga/effects";
 
 import {
-  createMusicRequested,
-  createMusicSucceeded,
-  createMusicFailed,
-} from "../features/createmusic/create-music-slice";
-
-import {
-  deleteMusicRequested,
-  deleteMusicSucceeded,
-  deleteMusicFailed,
-} from "../features/deletemusic/delete-music-slice";
-
-import {
   fetchMusicDataFailed,
   fetchMusicDataSucceeded,
   fetchMusicDataRequested,
-} from "../features/fetchmusic/music-data-slice";
-
-import {
-  updateMusicRequested,
+  createMusicSucceeded,
+  createMusicFailed,
+  createMusicRequested,
   updateMusicSucceeded,
   updateMusicFailed,
-} from "../features/updateMusic/update-music-slice";
+  updateMusicRequested,
+  deleteMusicRequested,
+  deleteMusicSucceeded,
+  deleteMusicFailed,
+  selectSearchQuery,
+  selectSortOption,
+} from "../features/music-data-slice";
 
 import {
   createMusic,
@@ -31,65 +24,83 @@ import {
   fetchMusics,
 } from "../services/api";
 import { Music } from "../definitions/defn";
-import { RootState } from "../app/store";
 
-function* createMusicSaga(action: { type: string; payload: Music }) {
-  try {
-    const newMusic: Music = yield call(createMusic, action.payload);
-    yield put(createMusicSucceeded(newMusic));
-    const { searchQuery, sortOption } = yield select((state: RootState) => state.musicData);
-    yield put(fetchMusicDataRequested({ searchQuery, sortOption }));
-  } catch (error) {
-    yield put(createMusicFailed({ error: (error as Error).message }));
-  }
-}
+// Sagas
 
-function* deleteMusicSaga(action: { type: string; payload: number }) {
-  try {
-    yield call(deleteMusic, action.payload);
-    yield put(deleteMusicSucceeded());
-
-    
-
-
-  } catch (error) {
-    yield put(deleteMusicFailed({ error: (error as Error).message }));
-  }
-}
-
-function* fetchMusicDataSaga(action: {
+// Create music
+function* createMusicSaga(action: {
   type: string;
-  payload: { searchQuery: string; sortOption: string };
+  payload: { newMusic: Music };
 }) {
-  const { searchQuery, sortOption } = action.payload;
+  try {
+    const newMusic: Music = yield call(createMusic, action.payload.newMusic);
+    yield put(createMusicSucceeded({ newMusic }));
+  } catch (error) {
+    switch ((error as Error).message) {
+      case "Failed to fetch":
+        yield put(
+          createMusicFailed({
+            createError: "Failed to connect to the server",
+          })
+        );
+        break;
+      default:
+        yield put(createMusicFailed({ createError: (error as Error).message }));
+    }
+  }
+}
+
+// Delete music
+function* deleteMusicSaga(action: {
+  type: string;
+  payload: { deletedMusicId: number };
+}) {
+  try {
+    console.log("Deleting music with id: ", action.payload.deletedMusicId);
+    const q: boolean = yield call(deleteMusic, action.payload.deletedMusicId);
+
+    if(!q) throw(new Error('Unable to connect to the server'))
+    yield put(deleteMusicSucceeded());
+  } catch (error) {
+    yield put(deleteMusicFailed({ deleteError: (error as Error).message }));
+  }
+}
+
+// Fetch music data: later I will come back to this function
+function* fetchMusicDataSaga() {
+  const searchQuery = selectSearchQuery(yield select());
+  const sortOption = selectSortOption(yield select());
 
   try {
     const musicData: Music[] = yield call(() =>
-      fetchMusics({ searchQuery, sortBy: sortOption })
+      fetchMusics({ searchQuery, sortOption })
     );
-    yield put(fetchMusicDataSucceeded(musicData));
+    yield put(fetchMusicDataSucceeded({ musicList: musicData }));
   } catch (error) {
-    yield put(fetchMusicDataFailed({ error: (error as Error).message }));
+    yield put(fetchMusicDataFailed({ fetchError: (error as Error).message }));
   }
 }
 
-function* updateMusicSaga(action: { type: string; payload: Music }) {
+function* updateMusicSaga(action: {
+  type: string;
+  payload: { updatedMusic: Music };
+}) {
   try {
     const updatedMusic: Music = yield call(
       updateMusic,
-      action.payload.id as number,
-      action.payload
+      action.payload.updatedMusic.id as number,
+      action.payload.updatedMusic
     );
-    yield put(updateMusicSucceeded(updatedMusic));
-    const { searchQuery, sortOption } = yield select(
-      (state: RootState) => state.musicData
+    yield put(updateMusicSucceeded({ updatedMusic }));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_error) {
+    yield put(
+      updateMusicFailed({ updateError: "Failed to connect to the server" })
     );
-    yield put(fetchMusicDataRequested({ searchQuery, sortOption }));
-  } catch (error) {
-    yield put(updateMusicFailed({ error: (error as Error).message }));
   }
 }
 
+// Watchers
 export function* watchUpdateMusic() {
   yield takeLatest(updateMusicRequested.type, updateMusicSaga);
 }

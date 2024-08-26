@@ -1,24 +1,26 @@
 import React, { useEffect } from "react";
 import { Form, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../app/hooks.js";
-import TableSkeleton from "./skeletons/table-skeleton.js";
-import EmptyResponse from "./EmptyResponse.js";
-import ErrorComponent from "./Error.js";
 
-import { deleteMusicRequested } from "../features/deletemusic/delete-music-slice.js";
+import ErrorComponent from "./Error.js";
+import EmptyResponse from "./EmptyResponse.js";
+import TableSkeleton from "./skeletons/table-skeleton.js";
+import { useAppDispatch, useAppSelector } from "../app/hooks.js";
+
+import { deleteMusicRequested, resetDeleteMusicState } from "../features/music-data-slice.js";
 import { Actions, Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '../styles/musics';
 
 const Musics: React.FC = () => {
   const { musicData, loading, loadError } = useAppSelector(state => state.musicData);
-  const { deleteIsPending, deleteError, deletedMusicId } = useAppSelector(state => state.deleteMusic);
+  const { deleteIsPending, deleteError, deletedMusicId } = useAppSelector(state => state.musicData);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+
   const handleDelete = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.currentTarget[0] as HTMLInputElement;
-    dispatch(deleteMusicRequested(target.value));
+    dispatch(deleteMusicRequested({ deletedMusicId: Number(target.value) }));
   };
 
   const handleEdit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -28,8 +30,9 @@ const Musics: React.FC = () => {
   useEffect(() => {
     if (deletedMusicId && !deleteIsPending && !deleteError) {
       console.log(`Music with id ${deletedMusicId} has been deleted`);
+      resetDeleteMusicState();
     } else if (deleteError) {
-      window.alert(deleteError);
+      console.log('Delete error', deleteError);
     }
   }, [deleteError, deleteIsPending, deletedMusicId, dispatch, navigate]);
 
@@ -61,7 +64,9 @@ const Musics: React.FC = () => {
                 <Td>
                   <Actions>
                     <Form>
-                      <Button value={music.id} type="button" onClick={handleEdit}>Edit</Button>
+                      <Button value={music.id} type="button" onClick={handleEdit}
+                        disabled={deleteIsPending}
+                        aria-disabled={deleteIsPending}>Edit</Button>
                     </Form>
                     <Form onSubmit={handleDelete}>
                       <Button color="red"
