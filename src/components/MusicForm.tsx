@@ -35,6 +35,7 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
+
     if (mode === 'edit') {
       const updated = { updated: { id: Number(musicId), title, artist, album, genre, duration, url } }
       console.log("Updating music: ", updated);
@@ -44,6 +45,7 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
       dispatch(createMusicRequested({ newMusic: { title, artist, album, genre, duration, url } }));
     }
   }
+
 
   useEffect(() => {
     switch (mode) {
@@ -92,8 +94,9 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
                 value={title}
                 name="title"
                 id="music-title" aria-describedby="title-error"
+                required
                 onChange={e => setTitle(e.target.value)}
-                required />
+              />
               <Label htmlFor="music-title">Title</Label>
               <Underline />
             </InputData>
@@ -105,8 +108,9 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
                 value={artist}
                 name="artist"
                 id="music-artist" aria-describedby="artist-error"
+                required
                 onChange={e => setArtist(e.target.value)}
-                required />
+              />
               <Label htmlFor="music-artist">Artist</Label>
               <Underline />
             </InputData>
@@ -118,8 +122,9 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
                 value={album}
                 name="album"
                 id="music-album" aria-describedby="album-error"
+                required
                 onChange={e => setAlbum(e.target.value)}
-                required />
+              />
               <Label htmlFor="music-album">Album</Label>
               <Underline />
             </InputData>
@@ -131,8 +136,9 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
                 value={genre}
                 name="genre"
                 id="music-genre" aria-describedby="genre-error"
+                required
                 onChange={e => setGenre(e.target.value)}
-                required />
+              />
               <Label htmlFor="music-genre">Genre</Label>
               <Underline />
             </InputData>
@@ -144,8 +150,9 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
                 value={duration}
                 name="duration"
                 id="music-duration" aria-describedby="duration-error"
+                required
                 onChange={e => setDuration(e.target.value)}
-                required />
+              />
               <Label htmlFor="music-duration">Duration</Label>
               <Underline />
             </InputData>
@@ -157,8 +164,9 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
                 value={url}
                 name="url"
                 id="music-url" aria-describedby="url-error"
+                required
                 onChange={e => setUrl(e.target.value)}
-                required />
+              />
               <Label htmlFor="music-url">URL</Label>
               <Underline />
             </InputData>

@@ -23,6 +23,15 @@ interface MusicDataState {
   deletedMusicId: number | null;
   deleteError: string | null;
   deleteIsPending: boolean;
+
+  formErrors: {
+    titleError?: string | null;
+    albumError?: string | null;
+    artistError?: string | null;
+    genreError?: string | null;
+    durationError?: string | null;
+    urlError?: string | null;
+  };
 }
 
 const initialState: MusicDataState = {
@@ -43,6 +52,15 @@ const initialState: MusicDataState = {
   deletedMusicId: null,
   deleteError: null,
   deleteIsPending: false,
+
+  formErrors: {
+    titleError: null,
+    albumError: null,
+    artistError: null,
+    genreError: null,
+    durationError: null,
+    urlError: null,
+  },
 };
 
 // Default: every payload is an object
@@ -154,6 +172,31 @@ export const musicDataSlice = createSlice({
       state.deleteError = null;
       state.deleteIsPending = false;
     },
+
+    setFormErrors: (
+      state,
+      action: PayloadAction<{
+        titleError?: string | null;
+        albumError?: string | null;
+        artistError?: string | null;
+        genreError?: string | null;
+        durationError?: string | null;
+        urlError?: string | null;
+      }>
+    ) => {
+      state.formErrors = action.payload;
+    },
+
+    resetFormErrors: (state) => {
+      state.formErrors = {
+        titleError: null,
+        albumError: null,
+        artistError: null,
+        genreError: null,
+        durationError: null,
+        urlError: null,
+      };
+    },
   },
 });
 
@@ -179,6 +222,9 @@ export const {
   deleteMusicSucceeded,
   deleteMusicFailed,
   resetDeleteMusicState,
+
+  setFormErrors,
+  resetFormErrors,
 } = musicDataSlice.actions;
 
 export const selectSearchQuery = (state: { musicData: MusicDataState }) =>
