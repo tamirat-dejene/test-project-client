@@ -8,7 +8,7 @@ import Artists from './components/Artists';
 import { Provider } from 'react-redux';
 import store from './app/store';
 import MusicForm from './components/MusicForm';
-import NotFound from './components/404';
+import NotFound from './404';
 
 const router = createBrowserRouter([
   {
