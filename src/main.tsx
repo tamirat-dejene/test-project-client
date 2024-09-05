@@ -1,14 +1,14 @@
-import { StrictMode } from 'react'
+// import { StrictMode } from 'react'
+import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import App from './components/App'
-import Musics from './components/Musics';
-import Albums from './components/Albums';
-import Artists from './components/Artists';
-import { Provider } from 'react-redux';
 import store from './app/store';
-import MusicForm from './components/MusicForm';
+import App from './components/App'
 import NotFound from './404';
+import Musics from './components/_Musics';
+import Albums from './components/_Albums';
+import Artists from './components/_Artists';
+import MusicForm from './components/MusicForm';
 
 const router = createBrowserRouter([
   {
@@ -47,9 +47,9 @@ const router = createBrowserRouter([
 
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
-  </StrictMode>,
+  /* </StrictMode>, */
 )

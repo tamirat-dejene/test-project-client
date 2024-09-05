@@ -1,6 +1,7 @@
-import { Mode } from "../definitions/defn";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
+import { Mode } from "../definitions/defn";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { createMusicRequested, resetCreateMusicState, resetUpdateMusicState, updateMusicRequested } from "../features/music-data-slice";
 import { Form, FormContainer, FormLabel, FormRow, Input, InputData, Label, Underline, ButtonContainer, StyledLink, StyledButton } from "../styles/music-form";
@@ -17,7 +18,7 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { musicData, createdMusic, createError, createIsPending, updatedMusic, updateError, updateIsPending } = useAppSelector(state => state.musicData);
+  const { musicData, createdMusic, createIsPending, updatedMusic, updateIsPending, musicDataError } = useAppSelector(state => state.musicData);
 
   useEffect(() => {
     if (mode === 'edit' && musicData) {
@@ -50,28 +51,28 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
   useEffect(() => {
     switch (mode) {
       case 'create':
-        if (!createIsPending && !createError && createdMusic) {
+        if (!createIsPending && !musicDataError && createdMusic) {
           console.log("Music created: ", createdMusic);
           setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
 
           navigate('/musics');
           dispatch(resetCreateMusicState());
-        } else if (!createIsPending && createError && !createdMusic) {
-          console.log("Error creating music: ", createError);
+        } else if (!createIsPending && musicDataError && !createdMusic) {
+          console.log("Error creating music: ", musicDataError);
         }
         break;
       case 'edit':
-        if (!updateIsPending && updatedMusic && !updateError) {
+        if (!updateIsPending && updatedMusic && !musicDataError) {
           console.log("Music updated: ", updatedMusic);
           setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
 
           navigate('/musics');
           dispatch(resetUpdateMusicState());
-        } else if (!updateIsPending && updateError && updatedMusic) {
-          console.log("Error updating music: ", updateError);
+        } else if (!updateIsPending && musicDataError && updatedMusic) {
+          console.log("Error updating music: ", musicDataError);
         }
     }
-  }, [createIsPending, updateIsPending, createdMusic, updatedMusic, createError, updateError, mode, dispatch, navigate, musicData]);
+  }, [createIsPending, updateIsPending, createdMusic, updatedMusic, musicDataError, mode, dispatch, navigate, musicData]);
 
   return (
     <div style={{

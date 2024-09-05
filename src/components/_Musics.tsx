@@ -1,22 +1,18 @@
 import React, { useEffect } from "react";
 import { Form, useNavigate } from "react-router-dom";
-
-import ErrorComponent from "./Error.js";
-import EmptyResponse from "./EmptyResponse.js";
-import TableSkeleton from "./skeletons/table-skeleton.js";
-import { useAppDispatch, useAppSelector } from "../app/hooks.js";
-
-import { deleteMusicRequested, resetDeleteMusicState } from "../features/music-data-slice.js";
-import { Actions, Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '../styles/musics';
 import { FaEdit, FaSpinner, FaTrash } from "react-icons/fa";
 
-const Musics: React.FC = () => {
-  const { musicData, loading, loadError } = useAppSelector(state => state.musicData);
-  const { deleteIsPending, deleteError, deletedMusicId } = useAppSelector(state => state.musicData);
+import { useAppDispatch, useAppSelector } from "../app/hooks.js";
+import { deleteMusicRequested, resetDeleteMusicState } from "../features/music-data-slice.js";
 
+import { EmptyResponse } from "./Popup.js";
+import TableSkeleton from "./skeletons/table-skeleton.js";
+import { Actions, Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '../styles/musics.js';
+
+const Musics: React.FC = () => {
+  const { musicData, loading, deleteIsPending, deletedMusicId, musicDataError } = useAppSelector(state => state.musicData);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
 
   const handleDelete = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,25 +20,16 @@ const Musics: React.FC = () => {
     dispatch(deleteMusicRequested({ deletedMusicId: Number(target.value) }));
   };
 
-  const handleEdit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    navigate(`/musics/${e.currentTarget.value}/edit`);
-  };
-
   useEffect(() => {
-    if (deletedMusicId && !deleteIsPending && !deleteError) {
-      console.log(`Music with id ${deletedMusicId} has been deleted`);
+    if (deletedMusicId && !deleteIsPending && !musicDataError)
       resetDeleteMusicState();
-    } else if (deleteError) {
-      console.log('Delete error', deleteError);
-    }
-  }, [deleteError, deleteIsPending, deletedMusicId, dispatch, navigate]);
+  }, [deleteIsPending, deletedMusicId, musicDataError, navigate]);
 
   return (
     <TableContainer>
       {loading && <TableSkeleton />}
-      {loadError && <ErrorComponent message={loadError} />}
-      {musicData && !loading && musicData.length === 0 && !loadError && <EmptyResponse message='No songs have found' />}
-      {musicData && !loading && musicData.length !== 0 && !loadError &&
+      {musicData && !loading && musicData.length === 0 && !musicDataError && <EmptyResponse message='No songs found' />}
+      {musicData && !loading && musicData.length !== 0 && !musicDataError &&
         <Table>
           <Thead>
             <Tr>
@@ -65,11 +52,11 @@ const Musics: React.FC = () => {
                 <Td>
                   <Actions>
                     <Form>
-                      <Button value={music.id} type="button" onClick={handleEdit}
+                      <Button value={music.id} type="button"
+                        onClick={event => navigate(`/musics/${event.currentTarget.value}/edit`)}
                         disabled={deletedMusicId === music.id}
                         aria-disabled={deletedMusicId === music.id}>
                         <>Edit{' '}<FaEdit
-                          // make size fizxed
                           style={{ width: '17px', height: '17px' }}
                         /></>
                       </Button>

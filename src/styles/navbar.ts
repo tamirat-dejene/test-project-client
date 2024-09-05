@@ -3,7 +3,7 @@ import { space, layout, color, typography, SpaceProps, LayoutProps, ColorProps, 
 import { NavLink } from "react-router-dom";
 type ButtonProps = SpaceProps & LayoutProps & ColorProps & TypographyProps;
 
-const Header = styled.header`
+const Header = styled.header<{height: string}>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,7 +12,7 @@ const Header = styled.header`
   padding: 2px;
   background: inherit;
   color: white;
-  height: 30vh;
+  height: ${props => props.height};
   width: 90vw;
   margin: 0 auto;
   //
@@ -23,7 +23,8 @@ const Header = styled.header`
   z-index: 100;
 
   @media (max-width: 768px) {
-    height: 35vh;
+    height: ${props => props.height === '30vh' ? '35vh' : '20vh'};
+    
   }
 `;
 
@@ -168,7 +169,7 @@ const Search = styled.div`
   border-bottom: 2px solid #EEEDEB;
   border-radius: 5px;
   padding: 2px 5px;
-  width: 450px;
+  width: 440px;
   max-width: 100%;
   transition: border 0.3s ease;
 
@@ -229,7 +230,7 @@ const LogoAndCategories = styled.div`
   }
 `;
 
-const LogoAndCategoriesAndAddMusic = styled.div`
+const LogoAndCategoriesAndLogOut = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -242,4 +243,4 @@ const LogoAndCategoriesAndAddMusic = styled.div`
   }
 `;
 
-export { Header, Logo, Button, Categories, StyledForm, StyledLink, SortBy, Search, SearchAndSort, LogoAndCategories, LogoAndCategoriesAndAddMusic };
+export { Header, Logo, Button, Categories, StyledForm, StyledLink, SortBy, Search, SearchAndSort, LogoAndCategories, LogoAndCategoriesAndLogOut };

@@ -1,24 +1,99 @@
-import { Music } from "../definitions/defn";
+import {
+  AuthResponse,
+  FetchMusicOptions,
+  Music,
+  User,
+} from "../definitions/defn";
+
+const api_url = process.env.VITE_API_URL_LOCAL;
+
+const refreshSession = async (): Promise<AuthResponse> => {
+  const response = await fetch(`${api_url}/auth/refresh`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to refresh session");
+  }
+  const accessToken =
+    response.headers.get("Authorization")?.split(" ")[1] || null;
+  const user = await response.json();
+  return { user, accessToken };
+};
+
+const loginUser = async (user: User): Promise<AuthResponse> => {
+  const response = await fetch(`${api_url}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to login user");
+  }
+
+  const accessToken =
+    response.headers.get("Authorization")?.split(" ")[1] || null;
+  user = await response.json();
+  return { user, accessToken };
+};
+
+const logoutUser = async (): Promise<boolean> => {
+  const response = await fetch(`${api_url}/auth/logout`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to logout user");
+  }
+
+  return response.ok;
+};
+
+const registerUser = async (user: User): Promise<User> => {
+  const reposnse = await fetch(`${api_url}/auth/signup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(user),
+  });
+
+  if (!reposnse.ok) {
+    const errorData = await reposnse.json();
+    throw new Error(errorData.message || "Failed to register user");
+  }
+
+  const data = await reposnse.json();
+  return data;
+};
 
 const fetchMusics = async ({
+  authToken,
   searchQuery,
   sortOption,
-}: {
-  searchQuery?: string;
-  sortOption?: string;
-}): Promise<Music[]> => {
+}: FetchMusicOptions): Promise<Music[]> => {
   try {
     const response = await fetch(
-      `https://test-project-server-tdejene.vercel.app/musics?q=${
-        searchQuery || ""
-      }&o=${sortOption || ""}`,
+      `${api_url}/musics?q=${searchQuery || ""}&o=${sortOption || ""}`,
       {
         method: "GET",
         headers: {
+          Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
-          Accept: "application/json",
-          "ACCESS-CONTROL-ALLOW-ORIGIN": "*",
         },
+        credentials: "include",
       }
     );
 
@@ -28,16 +103,18 @@ const fetchMusics = async ({
     }
 
     const musics = await response.json();
-    // console.log("Musics fetched:", musics);
     return musics;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // console.error("Error fetching musics:", error);
     return [];
   }
 };
 
-const createMusic = async (newMusic: Music): Promise<Music> => {
+const createMusic = async (
+  newMusic: Music,
+  authToken: string | null
+): Promise<Music> => {
   const music = {
     title: newMusic.title,
     artist: newMusic.artist,
@@ -46,40 +123,45 @@ const createMusic = async (newMusic: Music): Promise<Music> => {
     duration: newMusic.duration,
     url: newMusic.url,
   };
-  const response = await fetch(
-    "https://test-project-server-tdejene.vercel.app/musics",
-    {
+
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const response = await fetch(`${api_url}/musics`, {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
-        Accept: "application/json",
-        "ACCESS-CONTROL-ALLOW-ORIGIN": "*",
       },
       body: JSON.stringify(music),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to create music");
     }
-  );
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to create music");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    // console.error("Error creating music:", error);
+    throw error;
   }
-
-  const data = await response.json();
-  return data;
 };
 
-const deleteMusic = async (id: number): Promise<boolean> => {
+const deleteMusic = async (
+  id: number,
+  authToken: string | null
+): Promise<boolean> => {
   try {
-    const response = await fetch(
-      `https://test-project-server-tdejene.vercel.app/musics/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${api_url}/musics/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -87,14 +169,18 @@ const deleteMusic = async (id: number): Promise<boolean> => {
     }
 
     return true;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // console.error("Error deleting music:", error);
     return false;
   }
 };
 
-const updateMusic = async (id: number, updatedMusic: Music): Promise<Music> => {
+const updateMusic = async (
+  id: number,
+  updatedMusic: Music,
+  authToken: string | null
+): Promise<Music> => {
   const music = {
     id: id,
     title: updatedMusic.title,
@@ -105,26 +191,38 @@ const updateMusic = async (id: number, updatedMusic: Music): Promise<Music> => {
     url: updatedMusic.url,
   };
 
-  const response = await fetch(
-    `https://test-project-server-tdejene.vercel.app/musics/${id}`,
-    {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const response = await fetch(`${api_url}/musics/${id}`, {
       method: "PUT",
       headers: {
+        Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
-        Accept: "application/json",
-        "ACCESS-CONTROL-ALLOW-ORIGIN": "*",
       },
+      credentials: "include",
       body: JSON.stringify(music),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update music");
     }
-  );
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to update music");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    // console.error("Error updating music:", error);
+    throw error;
   }
-
-  const data = await response.json();
-  return data;
 };
 
-export { fetchMusics, createMusic, deleteMusic, updateMusic };
+export {
+  fetchMusics,
+  createMusic,
+  deleteMusic,
+  updateMusic,
+  loginUser,
+  logoutUser,
+  registerUser,
+  refreshSession,
+};

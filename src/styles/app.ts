@@ -1,4 +1,8 @@
 import styled from "@emotion/styled";
+import { FaSpinner } from "react-icons/fa";
+import { layout, space, flexbox } from "styled-system";
+
+const Header = styled.div``;
 
 const MainContainer = styled.div`
   font-family: 'Roboto', sans-serif;
@@ -11,22 +15,22 @@ const MainContainer = styled.div`
 `;
 
 
-const OutletContainer = styled.div`
+const OutletContainer = styled.div<{marginTop: string}>`
   width: 90vw;
   margin: 0 auto;
   background-color: inherit;
-  height: 60vh;
+  height: calc(90vh - ${props => props.marginTop});
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #333 #f2f2f2;
 
   box-sizing: border-box;
-  margin-top: 30vh;
+  ${props => `margin-top: ${props.marginTop};`}
   margin-bottom: 10vh;
 
   @media (max-width: 768px) {
-    margin-top: 35vh;
-    margin-bottom: 9.5vh;
+    margin-top: ${props => props.marginTop === '30vh' ? '35vh' : '20vh'};
+    margin-bottom: ${props => props.marginTop === '30vh' ? '8vh' : '10vh'};
   }
 `;
 
@@ -56,4 +60,38 @@ const Footer = styled.div`
   }
 `
 
-export { MainContainer, OutletContainer, Footer }; 
+const Code = styled.code`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+`;
+
+const SpinnerContainer = styled.div`
+  ${layout}
+  ${flexbox}
+  ${space}
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh; 
+`;
+
+const SpinnerIcon = styled(FaSpinner)`
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+export { MainContainer, OutletContainer, Footer, Code, Header, SpinnerContainer, SpinnerIcon }; 

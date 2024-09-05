@@ -8,7 +8,25 @@ type Music = {
   url: string;
 };
 
+type User = {
+  id?: number;
+  username?: string;
+  email: string;
+  password: string;
+};
+
 type Mode = "create" | "edit";
 
+interface AuthResponse {
+  accessToken: string | null;
+  user: User;
+}
 
-export type { Music, Mode };
+interface FetchMusicOptions {
+  authToken: string | null;
+  searchQuery?: string;
+  sortOption?: string;
+}
+
+
+export type { User, Music, Mode, AuthResponse, FetchMusicOptions };
