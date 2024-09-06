@@ -4,7 +4,7 @@ import React, { useCallback, useEffect } from "react";
 import { FaPlayCircle, FaPlusCircle, FaSearch, FaUserMinus } from "react-icons/fa";
 
 import { useAppDispatch, useAppSelector } from "../app/hooks.ts";
-import { logoutUserRequested } from "../features/user-data-slice.ts";
+import { logoutUserRequested, setLoggedOut } from "../features/user-data-slice.ts";
 import { fetchMusicDataRequested, resetFetchDataState, setSearchQuery, setSortOption } from "../features/music-data-slice.ts";
 import { Button, Categories, Header, Logo, LogoAndCategories, LogoAndCategoriesAndLogOut, Search, SearchAndSort, SortBy, StyledLink } from '../styles/navbar';
 
@@ -12,7 +12,7 @@ const NavBar: React.FC<{ height: string }> = ({ height }) => {
   const searchQuery = useAppSelector(state => state.musicData.searchQuery);
   const sortOption = useAppSelector(state => state.musicData.sortOption);
   const accessToken = useAppSelector(state => state.userData.accessToken);
-  const { logoutIsPending, userDataError, refreshSessionIsPending } = useAppSelector(state => state.userData);
+  const { loggedOut, logoutIsPending } = useAppSelector(state => state.userData);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -30,11 +30,12 @@ const NavBar: React.FC<{ height: string }> = ({ height }) => {
   };
   
   useEffect(() => {
-    if (!logoutIsPending && !userDataError && !accessToken && !refreshSessionIsPending) {
+    if (loggedOut) {
       window.history.replaceState(null, '', '/');
       dispatch(resetFetchDataState());
+      dispatch(setLoggedOut(false));
     }
-  }, [accessToken, dispatch, logoutIsPending, refreshSessionIsPending, userDataError]);
+  }, [loggedOut, dispatch]);
       
 
   const loggedIn = useAppSelector(state => state.userData.accessToken);

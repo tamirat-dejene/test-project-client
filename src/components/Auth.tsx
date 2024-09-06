@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { User } from '../definitions/defn';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { loginUserRequested, registerUserRequested } from '../features/user-data-slice';
+import { loginUserRequested, registerUserRequested, setSignedUp } from '../features/user-data-slice';
 import { AuthContainer, Button, Input, Label, Login, Main, Signup, InvisibleCheckBox } from '../styles/auth';
 
 const Auth = () => {
@@ -11,7 +11,7 @@ const Auth = () => {
   const [signupUsername, setSignupUsername] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
-  const { loginIsPending, registerIsPending } = useAppSelector(state => state.userData)
+  const { loginIsPending, registerIsPending, signedUp } = useAppSelector(state => state.userData)
   const [isChecked, setIsChecked] = useState(true); // check box state
   const dispatch = useAppDispatch();
 
@@ -26,6 +26,14 @@ const Auth = () => {
     const user = { email: loginEmail, password: loginPassword }
     dispatch(loginUserRequested({ user }))
   };
+
+
+  useEffect(() => {
+    if (signedUp) {
+      setIsChecked(!isChecked);
+      dispatch(setSignedUp(false));
+    }
+  }, [dispatch, isChecked, signedUp]);
 
   return (
     <AuthContainer>

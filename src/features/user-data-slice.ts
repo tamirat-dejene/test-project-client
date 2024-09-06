@@ -9,6 +9,8 @@ interface UserDataState {
   registerIsPending: boolean;
   logoutIsPending: boolean;
   refreshSessionIsPending: boolean;
+  loggedOut: boolean;
+  signedUp: boolean;
 
   userDataError: string | null;
 }
@@ -21,6 +23,8 @@ const initialState: UserDataState = {
   registerIsPending: false,
   logoutIsPending: false,
   refreshSessionIsPending: true,
+  loggedOut: false,
+  signedUp: false,
 
   userDataError: null,
 };
@@ -69,6 +73,7 @@ export const userDataSlice = createSlice({
     registerUserSucceeded(state, action: PayloadAction<{ user: User }>) {
       state.user = action.payload.user;
       state.registerIsPending = false;
+      state.signedUp = true;
     },
 
     registerUserFailed(state, action: PayloadAction<{ error: string }>) {
@@ -85,6 +90,7 @@ export const userDataSlice = createSlice({
       state.user = null;
       state.accessToken = null;
       state.logoutIsPending = false;
+      state.loggedOut = true;
     },
 
     logoutUserFailed(state, action: PayloadAction<{ error: string }>) {
@@ -94,6 +100,14 @@ export const userDataSlice = createSlice({
 
     resetUserDataError(state) {
       state.userDataError = null;
+    },
+
+    setLoggedOut(state, action: PayloadAction<boolean>) {
+      state.loggedOut = action.payload;
+    },
+
+    setSignedUp(state, action: PayloadAction<boolean>) {
+      state.signedUp = action.payload;
     }
   },
 });
@@ -112,6 +126,8 @@ export const {
   logoutUserSucceeded,
   logoutUserFailed,
   resetUserDataError,
+  setLoggedOut,
+  setSignedUp,
 } = userDataSlice.actions;
 
 export const selectAuthToken = (state: { userData: UserDataState }) =>
