@@ -15,7 +15,6 @@ const Header = styled.header<{height: string}>`
   height: ${props => props.height};
   width: 90vw;
   margin: 0 auto;
-  //
   position: fixed;
   top: 0;
   left: 0;
@@ -24,7 +23,6 @@ const Header = styled.header<{height: string}>`
 
   @media (max-width: 768px) {
     height: ${props => props.height === '30vh' ? '35vh' : '20vh'};
-    
   }
 `;
 
@@ -50,8 +48,13 @@ const Logo = styled.div<TypographyProps>`
     gap: 5px;
 
     h1 {
-      display: none;
+      font-size: 1rem;
     } 
+      
+    svg {
+      min-width: 30px;
+      min-height: 30px;
+    }
   }
 `;
 

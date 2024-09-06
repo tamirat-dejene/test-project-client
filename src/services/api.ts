@@ -85,17 +85,17 @@ const fetchMusics = async ({
   sortOption,
 }: FetchMusicOptions): Promise<Music[]> => {
   try {
-    const response = await fetch(
-      `${api_url}/musics?q=${searchQuery || ""}&o=${sortOption || ""}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      }
-    );
+    const fetch_path = `${api_url}/musics?q=${searchQuery || ""}&o=${
+      sortOption || ""
+    }`;
+    const response = await fetch(fetch_path, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -104,7 +104,7 @@ const fetchMusics = async ({
 
     const musics = await response.json();
     return musics;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // console.error("Error fetching musics:", error);
     return [];
@@ -169,7 +169,7 @@ const deleteMusic = async (
     }
 
     return true;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // console.error("Error deleting music:", error);
     return false;

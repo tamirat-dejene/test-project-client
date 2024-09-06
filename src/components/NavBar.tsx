@@ -12,7 +12,7 @@ const NavBar: React.FC<{ height: string }> = ({ height }) => {
   const searchQuery = useAppSelector(state => state.musicData.searchQuery);
   const sortOption = useAppSelector(state => state.musicData.sortOption);
   const accessToken = useAppSelector(state => state.userData.accessToken);
-  const { logoutIsPending } = useAppSelector(state => state.userData);
+  const { logoutIsPending, userDataError, refreshSessionIsPending } = useAppSelector(state => state.userData);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -27,9 +27,15 @@ const NavBar: React.FC<{ height: string }> = ({ height }) => {
 
   const handleLogOut = () => {
     dispatch(logoutUserRequested());
-    window.history.replaceState(null, '', '/');
-    dispatch(resetFetchDataState());
   };
+  
+  useEffect(() => {
+    if (!logoutIsPending && !userDataError && !accessToken && !refreshSessionIsPending) {
+      window.history.replaceState(null, '', '/');
+      dispatch(resetFetchDataState());
+    }
+  }, [accessToken, dispatch, logoutIsPending, refreshSessionIsPending, userDataError]);
+      
 
   const loggedIn = useAppSelector(state => state.userData.accessToken);
   return (
