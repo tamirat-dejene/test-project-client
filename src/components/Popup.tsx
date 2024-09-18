@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import { resetMusicDataError } from '../features/music-data-slice';
-import { resetUserDataError } from '../features/user-data-slice';
+import { setMusicDataError } from '../features/music-data-slice';
+import { setUserDataError } from '../features/user-data-slice';
 import { EmptyResponseContainer, Popup } from '../styles/popup';
 
 interface ErrorPopupProps {
@@ -21,8 +21,8 @@ const ErrorPopup = ({ duration, position = 'bottom-right' }: ErrorPopupProps) =>
 
       const timer = setTimeout(() => {
         setVisible(false);
-        if (musicDataError) dispatch(resetMusicDataError());
-        if (userDataError) dispatch(resetUserDataError());
+        if (musicDataError) dispatch(setMusicDataError(null));
+        if (userDataError) dispatch(setUserDataError(null));
       }, duration);
 
       return () => clearTimeout(timer);

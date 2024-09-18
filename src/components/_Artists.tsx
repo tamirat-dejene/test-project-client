@@ -5,13 +5,13 @@ import { ArtistCard, ArtistImage, ArtistName, ArtistsContainer } from '../styles
 
 
 const Artists = () => {
-  const { musicData, loading, musicDataError } = useAppSelector(state => state.musicData);
+  const { musicList, fetchIsPending, musicDataError } = useAppSelector(state => state.musicData);
 
   return (
     <ArtistsContainer>
-      {loading && <ArtistSkeleton />}
-      {musicData && !loading && musicData.length === 0 && !musicDataError && <EmptyResponse message='No artists found' />}
-      {musicData && !loading && musicData.length !== 0 && !musicDataError && musicData.map((artist) => (
+      {fetchIsPending && <ArtistSkeleton />}
+      {musicList && !fetchIsPending && musicList.length === 0 && !musicDataError && <EmptyResponse message='No artists found' />}
+      {musicList && !fetchIsPending && musicList.length !== 0 && !musicDataError && musicList.map((artist) => (
         <ArtistCard key={artist.id}>
           <ArtistImage
             src={`https://robohash.org/${artist.id}.png?size=100x100`}

@@ -9,6 +9,7 @@ interface UserDataState {
   registerIsPending: boolean;
   logoutIsPending: boolean;
   refreshSessionIsPending: boolean;
+  
   loggedOut: boolean;
   signedUp: boolean;
 
@@ -98,8 +99,8 @@ export const userDataSlice = createSlice({
       state.logoutIsPending = false;
     },
 
-    resetUserDataError(state) {
-      state.userDataError = null;
+    setUserDataError(state, action: PayloadAction<string | null>) {
+      state.userDataError = action.payload;
     },
 
     setLoggedOut(state, action: PayloadAction<boolean>) {
@@ -125,7 +126,7 @@ export const {
   logoutUserRequested,
   logoutUserSucceeded,
   logoutUserFailed,
-  resetUserDataError,
+  setUserDataError,
   setLoggedOut,
   setSignedUp,
 } = userDataSlice.actions;

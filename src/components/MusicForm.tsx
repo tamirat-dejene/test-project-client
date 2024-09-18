@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { Mode } from "../definitions/defn";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { createMusicRequested, resetCreateMusicState, resetUpdateMusicState, updateMusicRequested } from "../features/music-data-slice";
+import { createMusicRequested, setCreated, setUpdated, updateMusicRequested } from "../features/music-data-slice";
 import { Form, FormContainer, FormLabel, FormRow, Input, InputData, Label, Underline, ButtonContainer, StyledLink, StyledButton } from "../styles/music-form";
 
 const MusicForm = ({ mode }: { mode: Mode }) => {
@@ -11,18 +11,18 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
   const [artist, setArtist] = useState("");
   const [album, setAlbum] = useState("");
   const [genre, setGenre] = useState("");
-  const [duration, setDuration] = useState("");
   const [url, setUrl] = useState("");
+  const [duration, setDuration] = useState("");
 
   const { musicId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { musicData, createdMusic, createIsPending, updatedMusic, updateIsPending, musicDataError } = useAppSelector(state => state.musicData);
+  const { musicList, createIsPending, updateIsPending, created, updated } = useAppSelector(state => state.musicData);
 
   useEffect(() => {
-    if (mode === 'edit' && musicData) {
-      const music = musicData.find(music => music.id === Number(musicId));
+    if (mode === 'edit' && musicList) {
+      const music = musicList.find(music => music.id === Number(musicId));
       if (music) {
         setTitle(music.title || '');
         setArtist(music.artist || '');
@@ -32,47 +32,31 @@ const MusicForm = ({ mode }: { mode: Mode }) => {
         setUrl(music.url);
       }
     }
-  }, [mode, musicData, musicId]);
+  }, [mode, musicList, musicId]);
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-
-    if (mode === 'edit') {
-      const updated = { updated: { id: Number(musicId), title, artist, album, genre, duration, url } }
-      console.log("Updating music: ", updated);
-      dispatch(updateMusicRequested({ updatedMusic: { id: Number(musicId), title, artist, album, genre, duration, url } }));
-    } else {
-      console.log("Creating music: ", { title, artist, album, genre, duration, url });
-      dispatch(createMusicRequested({ newMusic: { title, artist, album, genre, duration, url } }));
-    }
-  }
-
+    if (mode === 'edit') dispatch(updateMusicRequested({ updatedMusic: { id: Number(musicId), title, artist, album, genre, duration, url } }));
+    else dispatch(createMusicRequested({ newMusic: { title, artist, album, genre, duration, url } }));
+  };
 
   useEffect(() => {
     switch (mode) {
       case 'create':
-        if (!createIsPending && !musicDataError && createdMusic) {
-          console.log("Music created: ", createdMusic);
+        if (created) {
           setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
-
           navigate('/musics');
-          dispatch(resetCreateMusicState());
-        } else if (!createIsPending && musicDataError && !createdMusic) {
-          console.log("Error creating music: ", musicDataError);
+          dispatch(setCreated(false));
         }
         break;
       case 'edit':
-        if (!updateIsPending && updatedMusic && !musicDataError) {
-          console.log("Music updated: ", updatedMusic);
+        if (updated) {
           setTitle(''); setArtist(''); setAlbum(''); setGenre(''); setDuration(''); setUrl('');
-
           navigate('/musics');
-          dispatch(resetUpdateMusicState());
-        } else if (!updateIsPending && musicDataError && updatedMusic) {
-          console.log("Error updating music: ", musicDataError);
+          dispatch(setUpdated(false));
         }
     }
-  }, [createIsPending, updateIsPending, createdMusic, updatedMusic, musicDataError, mode, dispatch, navigate, musicData]);
+  }, [created, dispatch, mode, navigate, updated]);
 
   return (
     <div style={{

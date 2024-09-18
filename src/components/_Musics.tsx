@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { FaEdit, FaSpinner, FaTrash } from "react-icons/fa";
 
 import { useAppDispatch, useAppSelector } from "../app/hooks.js";
-import { deleteMusicRequested, resetDeleteMusicState } from "../features/music-data-slice.js";
+import { deleteMusicRequested } from "../features/music-data-slice.js";
 
 import { EmptyResponse } from "./Popup.js";
 import TableSkeleton from "./skeletons/table-skeleton.js";
 import { Actions, Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '../styles/musics.js';
 
 const Musics: React.FC = () => {
-  const { musicData, loading, deleteIsPending, deletedMusicId, musicDataError } = useAppSelector(state => state.musicData);
+  const { musicList, fetchIsPending, deleteIsPending, deletedMusicId, musicDataError } = useAppSelector(state => state.musicData);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -20,16 +20,11 @@ const Musics: React.FC = () => {
     dispatch(deleteMusicRequested({ deletedMusicId: Number(target.value) }));
   };
 
-  useEffect(() => {
-    if (deletedMusicId && !deleteIsPending && !musicDataError)
-      resetDeleteMusicState();
-  }, [deleteIsPending, deletedMusicId, musicDataError, navigate]);
-
   return (
     <TableContainer>
-      {loading && <TableSkeleton />}
-      {musicData && !loading && musicData.length === 0 && !musicDataError && <EmptyResponse message='No songs found' />}
-      {musicData && !loading && musicData.length !== 0 && !musicDataError &&
+      {fetchIsPending && <TableSkeleton />}
+      {musicList && !fetchIsPending && musicList.length === 0 && !musicDataError && <EmptyResponse message='No songs found' />}
+      {musicList && !fetchIsPending && musicList.length !== 0 && !musicDataError &&
         <Table>
           <Thead>
             <Tr>
@@ -42,7 +37,7 @@ const Musics: React.FC = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {musicData.map((music) => (
+            {musicList.map((music) => (
               <Tr key={music.id}>
                 <Td>{music.title}</Td>
                 <Td>{music.artist}</Td>

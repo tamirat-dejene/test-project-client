@@ -15,15 +15,15 @@ import {
   refreshSessionRequested,
 } from "../features/user-data-slice";
 import {
-  fetchMusicDataFailed,
-  fetchMusicDataSucceeded,
   fetchMusicDataRequested,
+  fetchMusicDataSucceeded,
+  fetchMusicDataFailed,
+  createMusicRequested,
   createMusicSucceeded,
   createMusicFailed,
-  createMusicRequested,
+  updateMusicRequested,
   updateMusicSucceeded,
   updateMusicFailed,
-  updateMusicRequested,
   deleteMusicRequested,
   deleteMusicSucceeded,
   deleteMusicFailed,
@@ -48,11 +48,11 @@ import { Music, User } from "../definitions/defn";
 // Refresh session
 function* refreshSessionSaga() {
   try {
-    const {user, accessToken} = yield call(refreshSession);
+    const { user, accessToken } = yield call(refreshSession);
     yield put(refreshSessionSucceeded({ user, accessToken }));
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_error) {
-    yield put(refreshSessionFailed({ error: 'Login to continue' }));
+    yield put(refreshSessionFailed({ error: "Login to continue" }));
   }
 }
 
@@ -87,47 +87,6 @@ function* logoutUserSaga() {
   }
 }
 
-// Create music
-function* createMusicSaga(action: {
-  type: string;
-  payload: { newMusic: Music };
-}) {
-  const authToken = selectAuthToken(yield select());
-  try {
-    const newMusic: Music = yield call(createMusic, action.payload.newMusic, authToken);
-    yield put(createMusicSucceeded({ newMusic }));
-  } catch (error) {
-    switch ((error as Error).message) {
-      case "Failed to fetch":
-        yield put(
-          createMusicFailed({
-            createError: "Failed to connect to the server",
-          })
-        );
-        break;
-      default:
-        yield put(createMusicFailed({ createError: (error as Error).message }));
-    }
-  }
-}
-
-// Delete music
-function* deleteMusicSaga(action: {
-  type: string;
-  payload: { deletedMusicId: number };
-}) {
-  const authToken = selectAuthToken(yield select());
-  try {
-    console.log("Deleting music with id: ", action.payload.deletedMusicId);
-    const q: boolean = yield call(deleteMusic, action.payload.deletedMusicId, authToken);
-
-    if (!q) throw new Error("Unable to connect to the server");
-    yield put(deleteMusicSucceeded());
-  } catch (error) {
-    yield put(deleteMusicFailed({ deleteError: (error as Error).message }));
-  }
-}
-
 // Fetch music data: later I will come back to this function
 function* fetchMusicDataSaga() {
   const authToken = selectAuthToken(yield select());
@@ -144,24 +103,56 @@ function* fetchMusicDataSaga() {
   }
 }
 
+// Create music
+function* createMusicSaga(action: {
+  type: string;
+  payload: { newMusic: Music };
+}) {
+  const authToken = selectAuthToken(yield select());
+  try {
+    const newMusic: Music = yield call(createMusic, action.payload.newMusic, authToken);
+    yield put(createMusicSucceeded({ newMusic }));
+  } catch (error) {
+    yield put(createMusicFailed({ createError: (error as Error).message }));
+  }
+}
+
+// Update music
 function* updateMusicSaga(action: {
   type: string;
   payload: { updatedMusic: Music };
 }) {
   const authToken = selectAuthToken(yield select());
   try {
-    const updatedMusic: Music = yield call(
+    yield call(
       updateMusic,
       action.payload.updatedMusic.id as number,
       action.payload.updatedMusic,
       authToken
     );
-    yield put(updateMusicSucceeded({ updatedMusic }));
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    yield put(updateMusicSucceeded());
   } catch (_error) {
-    yield put(
-      updateMusicFailed({ updateError: "Failed to connect to the server" })
+    yield put(updateMusicFailed({ updateError: (_error as Error).message }));
+  }
+}
+
+// Delete music
+function* deleteMusicSaga(action: {
+  type: string;
+  payload: { deletedMusicId: number };
+}) {
+  const authToken = selectAuthToken(yield select());
+  try {
+    const q: boolean = yield call(
+      deleteMusic,
+      action.payload.deletedMusicId,
+      authToken
     );
+
+    if (!q) throw new Error("Unable delete music");
+    yield put(deleteMusicSucceeded());
+  } catch (error) {
+    yield put(deleteMusicFailed({ deleteError: (error as Error).message }));
   }
 }
 
