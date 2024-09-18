@@ -41,7 +41,7 @@ const Auth = () => {
         <InvisibleCheckBox type="checkbox" id="chk" aria-hidden onChange={() => setIsChecked(!isChecked)} />
         <Signup isChecked={isChecked}>
           <form onSubmit={handleSignUp}>
-            <Label htmlFor="chk" aria-hidden>Sign up</Label>
+            <Label htmlFor="chk" aria-hidden>Signup</Label>
             <Input type="text" placeholder="User name" onChange={event => setSignupUsername(event.target.value)} required />
             <Input type="email" placeholder="Email" onChange={event => setSignupEmail(event.target.value)} required />
             <Input type="password" placeholder="Password" onChange={event => setSignupPassword(event.target.value)} required />

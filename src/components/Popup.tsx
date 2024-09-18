@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import { setMusicDataError } from '../features/music-data-slice';
+import { setDeleteError, setMusicDataError } from '../features/music-data-slice';
 import { setUserDataError } from '../features/user-data-slice';
 import { EmptyResponseContainer, Popup } from '../styles/popup';
 
@@ -10,30 +10,31 @@ interface ErrorPopupProps {
 }
 
 const ErrorPopup = ({ duration, position = 'bottom-right' }: ErrorPopupProps) => {
-  const { musicDataError } = useAppSelector(state => state.musicData);
+  const { musicDataError, deleteError } = useAppSelector(state => state.musicData);
   const { userDataError } = useAppSelector(state => state.userData);
   const [visible, setVisible] = useState(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (musicDataError || userDataError) {
+    if (musicDataError || userDataError || deleteError) {
       setVisible(true);
 
       const timer = setTimeout(() => {
         setVisible(false);
         if (musicDataError) dispatch(setMusicDataError(null));
         if (userDataError) dispatch(setUserDataError(null));
+        if (deleteError) dispatch(setDeleteError(null));
       }, duration);
 
       return () => clearTimeout(timer);
     }
-  }, [dispatch, duration, userDataError, musicDataError]);
+  }, [dispatch, duration, userDataError, musicDataError, deleteError]);
 
   if (!visible) return null;
 
   return (
     <Popup visible={visible} position={position}>
-      <p>{musicDataError || userDataError}</p>
+      <p>{musicDataError || userDataError || deleteError}</p>
     </Popup>
   );
 };

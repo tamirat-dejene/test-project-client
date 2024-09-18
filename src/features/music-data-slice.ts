@@ -17,6 +17,7 @@ interface MusicDataState {
   deleteIsPending: boolean;
 
   musicDataError: string | null;
+  deleteError: string | null;
 }
 
 const initialState: MusicDataState = {
@@ -35,6 +36,7 @@ const initialState: MusicDataState = {
   updated: false,
 
   musicDataError: null,
+  deleteError: null
 };
 
 // Default: every payload is an object
@@ -88,6 +90,7 @@ export const musicDataSlice = createSlice({
       state.musicDataError = action.payload.createError;
       state.createIsPending = false;
       state.currentMusic = null;
+      state.created = false;
     },
 
     // Update music
@@ -115,6 +118,7 @@ export const musicDataSlice = createSlice({
       state.musicDataError = action.payload.updateError;
       state.updateIsPending = false;
       state.currentMusic = null;
+      state.updated = false;
     },
 
     // Delete music
@@ -136,7 +140,7 @@ export const musicDataSlice = createSlice({
       state,
       action: PayloadAction<{ deleteError: string }>
     ) => {
-      state.musicDataError = action.payload.deleteError;
+      state.deleteError = action.payload.deleteError;
       state.deletedMusicId = null;
       state.deleteIsPending = false;
     },
@@ -156,6 +160,9 @@ export const musicDataSlice = createSlice({
     setMusicDataError: (state, action: PayloadAction<string | null>) => {
       state.musicDataError = action.payload;
     },
+    setDeleteError: (state, action: PayloadAction<string | null>) => {
+      state.deleteError = action.payload
+    }
   },
 });
 
@@ -180,6 +187,7 @@ export const {
   setCreated,
   setUpdated,
   setMusicDataError,
+  setDeleteError
 } = musicDataSlice.actions;
 
 export const selectSearchQuery = (state: { musicData: MusicDataState }) =>

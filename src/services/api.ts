@@ -5,7 +5,8 @@ import {
   User,
 } from "../definitions/defn";
 
-const api_url = process.env.VITE_API_URL_LOCAL;
+const api_url = process.env.VITE_API_URL_LOCAL
+
 
 const refreshSession = async (): Promise<AuthResponse> => {
   const response = await fetch(`${api_url}/auth/refresh`, {
@@ -104,10 +105,10 @@ const fetchMusics = async ({
 
     const musics = await response.json();
     return musics;
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    // console.error("Error fetching musics:", error);
-    return [];
+    throw new Error("Failed to fetch musics");
   }
 };
 
