@@ -169,10 +169,10 @@ const Search = styled.div`
   align-items: center;
   background-color: #747264;
   border: none;
-  border-bottom: 2px solid #EEEDEB;
+  border-bottom: 2px solid #eeedeb;
   border-radius: 5px;
   padding: 2px 5px;
-  width: 440px;
+  width: 450px;
   max-width: 100%;
   transition: border 0.3s ease;
 
@@ -192,9 +192,9 @@ const Search = styled.div`
 
   &:focus-within {
     border-bottom: 2px solid #ff6600;
-    background-color: #45474B;
+    background-color: #45474b;
   }
-  
+
   svg {
     color: white;
     font-size: 1rem;
@@ -203,8 +203,12 @@ const Search = styled.div`
   }
 
   input:-internal-autofill-selected {
-    background-color: #45474B !important;
+    background-color: #45474b !important;
     border-radius: 5px;
+  }
+
+  @media (max-width: 680px) {
+    width: 330px;
   }
 `;
 

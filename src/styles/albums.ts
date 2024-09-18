@@ -34,6 +34,13 @@ const AlbumCard = styled.div`
   ${space}
   ${layout}
   ${color}
+
+  @media (max-width: 768px) {
+    width: 130px;
+    height: 130px
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const AlbumImage = styled.img`
